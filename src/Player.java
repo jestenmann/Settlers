@@ -5,10 +5,12 @@ public class Player {
 
 	private Color color;
 	private GameBoard board;
+	private int x;
 	
 	public Player(Color color, GameBoard board) {
 		this.color = color;
 		this.board = board;
+		
 		//Mladen sucks
 		//wtf git 
 	}
