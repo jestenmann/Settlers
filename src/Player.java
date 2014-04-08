@@ -10,6 +10,7 @@ public class Player {
 		this.color = color;
 		this.board = board;
 		//Mladen sucks
+		//wtf git 
 	}
 	
 	//different than place settlement b/c it doesn't have constraints about 
