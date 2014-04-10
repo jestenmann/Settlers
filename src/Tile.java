@@ -3,11 +3,13 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JComponent;
 
 
-public class Tile extends JComponent{
+public class Tile extends JComponent {
 
 	private NumberToken numberToken;
 	private boolean hasRobber;
@@ -19,7 +21,7 @@ public class Tile extends JComponent{
 		this.resource = resource;
 		
 		setLayout(null);
-		
+
 	}
 	
 	public void setNumberToken (NumberToken n) {
@@ -73,5 +75,7 @@ public class Tile extends JComponent{
 	
 		
 	}
+
+
 	
 }

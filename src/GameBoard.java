@@ -1,20 +1,30 @@
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.Color;
 import java.awt.Point;
-import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.table.TableColumn;
 
 
 
 public class GameBoard extends JPanel {
 
+	
+	public ArrayList<Player> players;
 	public ArrayList<Tile> tiles;
 	public ArrayList<NumberToken> numberTokens;
 	public ArrayList<Corner> corners;
-	
 	
 	private Tile grainOne;
 	private Tile grainTwo;
@@ -41,9 +51,31 @@ public class GameBoard extends JPanel {
 	
 	private Tile desert;
 	
-	public GameBoard() {
+	private int currPlayerIndex;
+	
+	//buttons
+	private JButton turn;
+	private JButton trade;
+	private JButton build;
+	private JButton roll;
+	private JButton upgrade;
+	
+	private JPanel buttonPanel;
+	private JPanel tablePanel;
+	
+	private JTextArea d1;
+	private JTextArea d2;
+	
+	private JScrollPane table;
+	
+	
+	public GameBoard(ArrayList<Player> players ) {
 		
+		this.players = players;
+		
+		currPlayerIndex = 0;
 		setLayout(null);
+		setBackground(Color.WHITE);
 		
 		createTiles();
 		placeTiles();
@@ -78,25 +110,135 @@ public class GameBoard extends JPanel {
 		tiles.get(17).setBounds(163, 299, w, h);
 		tiles.get(18).setBounds(243, 299, w, h);
 		
+		for (int i = 0; i < corners.size(); i++) {
+			add(corners.get(i));
+			
+		}
 		for (int i = 0; i < tiles.size(); i++) {
 			add(tiles.get(i));
 			
 		}
 		
+		
 		//tiles have been created and randomized
+
+		d1 = new JTextArea("Dice 1 value: ");
+		d2 = new JTextArea("Dice 2 value: ");
 		
+		//mouse stuff 
 		
+		Mouse mouseHandler = new Mouse();
+	    addMouseListener(mouseHandler);  
+	    addMouseMotionListener(mouseHandler);
+	    
+	    buttonPanel = new JPanel();
+	    buttonPanel.setBounds(700, 7, 150, 400);
+	    
+	    
+	    turn = new JButton("End turn");
+        turn.addActionListener(new ActionListener() { 
+            public void actionPerformed(ActionEvent e)
+            {
+            	if (currPlayerIndex == 3) 
+            		currPlayerIndex = 0;
+            	else
+            		currPlayerIndex += 1;
+            	repaint();
+                
+            }
+        });  
+	    build = new JButton("Build settlement");
+        build.addActionListener(new ActionListener() { 
+            public void actionPerformed(ActionEvent e)
+            {
+            	//JOptionPane.showMessageDialog(null, "Please select a corner to build a settlement");
+            	repaint();
+                
+            }
+        });  
+		roll = new JButton("Roll dice");
+        roll.addActionListener(new ActionListener() { 
+            public void actionPerformed(ActionEvent e)
+            {
+            	int dice1 = 1 + (int)(Math.random() * ((6 - 1) + 1));
+            	int dice2 = 1 + (int)(Math.random() * ((6 - 1) + 1));
+            	
+            	d1.setText("Dice 1 value: " + Integer.toString(dice1));
+            	d2.setText("Dice 2 value: "  + Integer.toString(dice2));
+            	repaint();
+                
+            }
+        });
+		upgrade = new JButton("Upgrade to city");
+		buttonPanel.setBackground(Color.WHITE);
+	    buttonPanel.add(roll);
+	    buttonPanel.add(build);
+	    buttonPanel.add(upgrade);
+	    buttonPanel.add(turn);
+	    buttonPanel.add(d1);
+	    buttonPanel.add(d2);
+	    
+	    table = createTable();
+	    tablePanel = new JPanel();
+	    tablePanel.setBackground(Color.WHITE);
+	    tablePanel.setBounds(450, 300, 475, 126);
+	    tablePanel.add(table);
+	    
+	    add(tablePanel);
+	   add(buttonPanel);
+	   
+
+	}
+	
+	private JScrollPane createTable() {
+		String[] columnNames = {"Player", "Brick", "Grain", "Lumber", "Ore", "Wool"};
+		Object[][] data = {
+			    {"Player 1 (blue)",  players.get(0).getBrick(), players.get(0).getGrain(), players.get(0).getLumber(), players.get(0).getOre(), players.get(0).getWool()},
+			    {"Player 2 (orange)", players.get(1).getBrick(), players.get(1).getGrain(), players.get(1).getLumber(), players.get(1).getOre(), players.get(1).getWool()},
+			    {"Player 2 (white)", players.get(2).getBrick(), players.get(2).getGrain(), players.get(2).getLumber(), players.get(2).getOre(), players.get(2).getWool()},
+			    {"Player 2 (red)", players.get(3).getBrick(), players.get(3).getGrain(), players.get(3).getLumber(), players.get(3).getOre(), players.get(3).getWool()}
+			    
+			};
+		
+		JTable table = new JTable(data, columnNames);
+		
+		//set the widths of each column
+		TableColumn column = null;
+		for (int i = 0; i < 5; i++) {
+		    column = table.getColumnModel().getColumn(i);
+		    if (i == 0)
+		    	column.setMinWidth(100);
+		    else if (i == 1)
+		    	column.setMinWidth(25);
+		    else if (i == 2)
+		    	column.setMinWidth(25);
+		    else if (i ==3)
+		    	column.setMinWidth(25);
+		    else
+		    	column.setMinWidth(25);
+		}
+		
+
+		table.setRowHeight(25);
+		JScrollPane tableScrollPane = new JScrollPane(table);
+		return tableScrollPane;
+
 	}
 	
 	public void placeSettlement(int corner, Player player) {
-		Building b = new Building(player);
-		corners.get(corner).addBuilding(b);
+		//Building b = new Building(player);
+		//corners.get(corner).addBuilding(b);
 	}
 	
 	public void placeRoad(Edge edge, Player player) {
-		Road r = new Road(player);
-		edge.buildRoad(r);
+		//Road r = new Road(player);
+		//edge.buildRoad(r);
 		
+	}
+	
+	
+	public void setPlayers(ArrayList<Player> players) {
+		this.players = players;
 	}
 	
 	private void createTiles() {
@@ -209,6 +351,15 @@ public class GameBoard extends JPanel {
 			corners.add(new Corner(i));
 		}
 		
+		corners.get(0).setPoint(new Point(125, 7));
+		corners.get(12).setPoint(new Point(126, 102));
+		corners.get(13).setPoint(new Point(206, 103));
+		corners.get(28).setPoint(new Point(85, 226));
+		corners.get(29).setPoint(new Point(166, 226));
+		corners.get(47).setPoint(new Point(85, 368));
+		
+		
+		
 		for (int i = 0; i <54; i++) {
 			Corner curr = corners.get(i);
 			int position = curr.getPosition();
@@ -255,21 +406,30 @@ public class GameBoard extends JPanel {
 		}
 	}
 	
-	public void paintComponent(Graphics g) {
+	class Mouse extends MouseAdapter implements MouseMotionListener{
 		
-		Graphics2D newG = (Graphics2D)g;
-		RenderingHints rh = new RenderingHints(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		newG.setRenderingHints(rh);
-		
-		//loop through and draw tiles
+		public void mouseClicked(MouseEvent e){
+			Point p = e.getPoint();
+			System.out.println(corners.get(0).getPoint());
+			System.out.println(p);
+			
+			for (int i = 0; i < corners.size(); i++) {
+				if (Math.abs(corners.get(i).getPoint().getX() - p.getX()) < 20) {
+					if (Math.abs(corners.get(i).getPoint().getY() - p.getY()) < 20) {
+						
+						corners.get(i).setBounds((int)p.getX()-10, (int)p.getY()-10, 100, 100);
+						
+						corners.get(i).addBuilding(new Building(players.get(currPlayerIndex)));
 
-		for (int i = 0; i < tiles.size(); i++) {
-
-			//tiles.get(i).paintComponent(newG);
+						repaint();
+					}
+				}
+					
+			}
+			
 		}
-		
-		
+	
 	}
 
-		
+
 }

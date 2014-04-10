@@ -4,17 +4,49 @@ import java.awt.Color;
 public class Player {
 
 	private Color color;
-	private GameBoard board;
-	private int x;
+	//private GameBoard board;
+	private int [] resources;
 	
-	public Player(Color color, GameBoard board) {
+	public Player(Color color) {
 		this.color = color;
-		this.board = board;
+		//this.board = board;
+		resources = new int[5];
+		for (int i =0; i < resources.length; i++) {
+			resources[i] = 0;
+		}
 		
 		//Mladen sucks
 		//wtf git 
 	}
 	
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+	
+	public int getBrick() {
+		return resources[0];
+	}
+	
+	public int getGrain() {
+		return resources[1];
+	}
+	
+	public int getLumber() {
+		return resources[2];
+	}
+	
+	public int getOre() {
+		return resources[3];
+	}
+	
+	public int getWool() {
+		return resources[4];
+	}
+
 	//different than place settlement b/c it doesn't have constraints about 
 	public int placeInitialSettlement() {
 		

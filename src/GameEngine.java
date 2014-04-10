@@ -12,19 +12,23 @@ public class GameEngine {
 	private ArrayList<Player> players;
 	
 	public GameEngine () {
-		board = new GameBoard();
+	
 		players = new ArrayList<Player>();
-		
+
 		//use this to add AI strategy in the Player class 
-		p1 = new Player(Color.BLUE, board);
-		p2 = new Player(Color.ORANGE, board);
-		p3 = new Player(Color.WHITE, board);
-		p4 = new Player(Color.RED, board);
+		p1 = new Player(Color.BLUE);
+		p2 = new Player(Color.ORANGE);
+		p3 = new Player(Color.WHITE);
+		p4 = new Player(Color.RED);
+		
 		
 		players.add(p1);
 		players.add(p2);
 		players.add(p3);
 		players.add(p4);
+
+		board = new GameBoard(players);
+		board.setPlayers(players);
 		
 		
 	}
@@ -42,6 +46,7 @@ public class GameEngine {
 			for (int i = 0; i < players.size(); i++) {
 				
 				Player currPlayer = players.get(i);
+
 				
 				while (!checkValidSettlement(settlement)) 
 					settlement = currPlayer.placeInitialSettlement();
@@ -53,6 +58,16 @@ public class GameEngine {
 					board.placeRoad(edge, currPlayer);
 			}
 		}
+	}
+	
+	public void turn(Player player) {
+		//all the things that can be done in a turn
+		//roll the dice
+		//resource production/allocation
+		//possibly moving the robber
+		//build
+		//buy development card
+		//trade?
 	}
 	
 	public boolean checkValidSettlement(int space) {
