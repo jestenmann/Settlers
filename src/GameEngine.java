@@ -11,8 +11,10 @@ public class GameEngine {
 	private Player p4;
 	private ArrayList<Player> players;
 	
-	public GameEngine () {
+	public GameInfo gameInfo;
 	
+	public GameEngine () {
+		
 		players = new ArrayList<Player>();
 
 		//use this to add AI strategy in the Player class 
@@ -29,6 +31,13 @@ public class GameEngine {
 
 		board = new GameBoard(players);
 		board.setPlayers(players);
+		
+		gameInfo = new GameInfo(board);
+		p1.setInfo(gameInfo);
+		p2.setInfo(gameInfo);
+		p3.setInfo(gameInfo);
+		p4.setInfo(gameInfo);
+		
 		
 		
 	}

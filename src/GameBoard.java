@@ -70,6 +70,7 @@ public class GameBoard extends JPanel {
 	
 	
 	public GameBoard(ArrayList<Player> players ) {
+	
 		
 		this.players = players;
 		

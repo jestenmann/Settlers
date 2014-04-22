@@ -4,19 +4,24 @@ import java.awt.Color;
 public class Player {
 
 	private Color color;
-	//private GameBoard board;
 	private int [] resources;
+	private GameInfo info;
 	
+	public GameInfo getInfo() {
+		return info;
+	}
+
+	public void setInfo(GameInfo info) {
+		this.info = info;
+	}
+
 	public Player(Color color) {
 		this.color = color;
-		//this.board = board;
 		resources = new int[5];
 		for (int i =0; i < resources.length; i++) {
 			resources[i] = 0;
 		}
 		
-		//Mladen sucks
-		//wtf git 
 	}
 	
 	public Color getColor() {
