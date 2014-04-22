@@ -1,3 +1,7 @@
+package game.components;
+
+import game.players.Player;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;

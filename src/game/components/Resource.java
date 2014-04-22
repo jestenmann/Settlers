@@ -1,3 +1,5 @@
+package game.components;
+
 import java.awt.Color;
 
 

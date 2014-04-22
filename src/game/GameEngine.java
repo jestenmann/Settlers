@@ -1,3 +1,7 @@
+package game;
+import game.components.Edge;
+import game.players.Player;
+
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -51,22 +55,22 @@ public class GameEngine {
 		int settlement = -1; 
 		Edge edge = null;
 		
-		for (int j = 0; j < 2; j++) {
+		/*for (int j = 0; j < 2; j++) {
 			for (int i = 0; i < players.size(); i++) {
 				
 				Player currPlayer = players.get(i);
 
 				
 				while (!checkValidSettlement(settlement)) 
-					settlement = currPlayer.placeInitialSettlement();
+					settlement = currPlayer.buildInitialSettlement();
 				
 				board.placeSettlement(settlement, currPlayer);
-				edge = currPlayer.placeRoad();
+				edge = currPlayer.buildRoad();
 				
 				while (!checkValidRoad(edge))
 					board.placeRoad(edge, currPlayer);
 			}
-		}
+		}*/
 	}
 	
 	public void turn(Player player) {

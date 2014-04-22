@@ -1,3 +1,4 @@
+package game;
 
 //this class gets all the relevant info from the game board for the player 
 public class GameInfo {

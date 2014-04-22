@@ -1,3 +1,5 @@
+package game.components;
+
 public class Edge {
 	
 	private Corner beginning;

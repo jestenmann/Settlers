@@ -1,3 +1,12 @@
+package game;
+import game.components.Building;
+import game.components.Corner;
+import game.components.Edge;
+import game.components.NumberToken;
+import game.components.Resource;
+import game.components.Tile;
+import game.players.Player;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
