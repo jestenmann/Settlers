@@ -1,9 +1,6 @@
 package game.components;
 
 
-import java.awt.Color;
-
-
 public enum DevelopmentCard {
 
 	KNIGHT,

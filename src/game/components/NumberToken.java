@@ -49,6 +49,14 @@ public class NumberToken extends JComponent {
 		return letter + ", " + number + ", " + dots + " dots, " + color.toString();
 	}
 	
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
 	public void paintComponent(Graphics g) {
 
 		Graphics2D g2D = (Graphics2D) g; 

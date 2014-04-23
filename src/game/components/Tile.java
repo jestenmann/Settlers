@@ -5,8 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.geom.GeneralPath;
 
 import javax.swing.JComponent;
 
@@ -26,6 +25,11 @@ public class Tile extends JComponent {
 
 	}
 	
+
+	public NumberToken getNumberToken() {
+		return numberToken;
+	}
+
 	public void setNumberToken (NumberToken n) {
 		numberToken = n;
 		numberToken.setBounds(23, 40, 50, 50);
@@ -44,7 +48,6 @@ public class Tile extends JComponent {
 	public String toString() {
 		if (numberToken != null)
 			return " Space: " + space + ", Resource: " + resource.toString() + ", Number Token: " + numberToken.toString();
-					//+ "\n" + corners.toString() + "\n" + edges.toString();
 		else
 			return "Space: " + space + ", Resource: " + resource.toString() + ", Robber" ;
 	}
@@ -62,19 +65,16 @@ public class Tile extends JComponent {
 		int[] yPoints = {25, 0, 25, 70, 95, 70};
 		Polygon hexagon = new Polygon(xPoints, yPoints, 6);
 		
-		
 		Graphics2D g2D = (Graphics2D) g; 
 		g2D.setColor(Color.BLACK);
 		g2D.setStroke(new BasicStroke(3));
 		g2D.drawPolygon(hexagon);
 		
 		g2D.setColor(resource.color());
-		g.fillPolygon(hexagon);
+		g2D.fillPolygon(hexagon);
 		
 		g.setColor(Color.BLACK);
 		g2D.drawString(resource.toString(), 23, 30);
-		
-	
 		
 	}
 

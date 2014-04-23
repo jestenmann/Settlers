@@ -22,7 +22,6 @@ public class GameRunner extends JFrame {
 	public static void main(String[]args) {
 		
 		GameEngine engine = new GameEngine();
-		engine.setup();
 		
 		/*for (int i = 0; i < engine.getBoard().corners.size(); i++) {
 			System.out.println(engine.getBoard().corners.get(i).toString());
@@ -36,7 +35,7 @@ public class GameRunner extends JFrame {
 		
 		//display the window.
 		frame.setVisible(true);
-		
+		engine.run();
 
 	}
 	
