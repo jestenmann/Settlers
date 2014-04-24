@@ -45,12 +45,12 @@ public class GameBoard extends JPanel {
 	private JTextArea d2;
 	
 	//starting positions for the tiles and corners 
-	int xStart = 25;
-	int yStart = 50;
+	private int xStart = 25;
+	private int yStart = 50;
 	
-	public GameBoard(ArrayList<Player> players ) {
+	public GameBoard() {
 
-		this.players = players;
+
 		currPlayerIndex = 0;
 		
 		createTiles();
@@ -64,7 +64,7 @@ public class GameBoard extends JPanel {
 		
 		//UI drawing stuff 
 		drawTiles();
-		buildInfoPanel();
+		//buildInfoPanel();
 		
 		//mouse listener stuff 
 		Mouse mouseHandler = new Mouse();
@@ -77,6 +77,12 @@ public class GameBoard extends JPanel {
 	public void buildSettlement(int space, Player p) {
 		Corner c = corners.get(space);
 		c.buildSettlement(p);
+		repaint();
+	}
+	
+	public void buildCity(int space, Player p) {
+		Corner c = corners.get(space);
+		c.upgradeSettlement();
 		repaint();
 	}
 	
@@ -94,7 +100,6 @@ public class GameBoard extends JPanel {
 		
 		edge.buildRoad(p);
 		
-		//need to figure this out 
 		if (edge.getOrientation().equals(Orientation.VERTICAL)) 
 			edge.setBounds(Math.min(beginningCorner.getX(), endCorner.getX())+10, Math.min(beginningCorner.getY(), endCorner.getY()) + 10, 100, 100);
 		else if (edge.getOrientation().equals(Orientation.RIGHT))
@@ -102,35 +107,23 @@ public class GameBoard extends JPanel {
 		else
 			edge.setBounds(Math.min(beginningCorner.getX(), endCorner.getX())+10, Math.min(beginningCorner.getY(), endCorner.getY())- (yStart - 67), 100, 100);
 		
-		//for drawing purposes
-		/*for (int i = 0; i < tiles.size(); i++) {
-			remove(tiles.get(i));
+	}
+	
+	public void moveRobber(int space) {
+		
+		for(int i = 0; i < tiles.size(); i++) {
+			if (tiles.get(i).hasRobber())
+				tiles.get(i).removeRobber();
 		}
 		
-		for (int i = 0; i < tiles.size(); i++) {
-			add(tiles.get(i));
-			
-		}*/
+		tiles.get(space).placeRobber();
+		repaint();
 	}
 	
 	public void setPlayers(ArrayList<Player> players) {
 		this.players = players;
 	}
 	
-	public void setDice(int first, int second) {
-		d1.setText("Dice 1 value: " + Integer.toString(first));
-		d2.setText("Dice 2 value: " + Integer.toString(second));
-	}
-	
-	public void updateResources(ArrayList<Player> players) {
-		this.players = players;
-		System.out.println(players.get(0).getBrick());
-		System.out.println(players.get(0).getGrain());
-		System.out.println(players.get(0).getLumber());
-		System.out.println(players.get(0).getOre());
-		System.out.println(players.get(0).getWool());
-		buildTable();
-	}
 	
 	private void createTiles() {
 		tiles = new ArrayList<Tile>();
@@ -243,41 +236,41 @@ public class GameBoard extends JPanel {
 			
 			if (position == 0 || position == 4 || position == 8 || position == 12 || position == 7 || position == 3) 
 				curr.addTile(tiles.get(0));
-			else if (position == 1 || position == 5 || position == 9 || position == 13 || position == 8 || position == 4) 
+			if (position == 1 || position == 5 || position == 9 || position == 13 || position == 8 || position == 4) 
 				curr.addTile(tiles.get(1));
-			else if (position == 2 || position == 6 || position == 10 || position == 14 || position == 9 || position == 5) 
+			if (position == 2 || position == 6 || position == 10 || position == 14 || position == 9 || position == 5) 
 				curr.addTile(tiles.get(2));
-			else if (position == 7 || position == 12 || position == 17 || position == 22 || position == 16 || position == 11) 
+			if (position == 7 || position == 12 || position == 17 || position == 22 || position == 16 || position == 11) 
 				curr.addTile(tiles.get(3));
-			else if (position == 8 || position == 13 || position == 18 || position == 23 || position == 17 || position == 12) 
+			if (position == 8 || position == 13 || position == 18 || position == 23 || position == 17 || position == 12) 
 				curr.addTile(tiles.get(4));
-			else if (position == 9 || position == 14 || position == 19 || position == 24 || position == 18 || position == 13) 
+			if (position == 9 || position == 14 || position == 19 || position == 24 || position == 18 || position == 13) 
 				curr.addTile(tiles.get(5));
-			else if (position == 10 || position == 15 || position == 20 || position == 25 || position == 19 || position == 14) 
+			if (position == 10 || position == 15 || position == 20 || position == 25 || position == 19 || position == 14) 
 				curr.addTile(tiles.get(6));
-			else if (position == 16 || position == 22 || position == 28 || position == 33 || position == 27 || position == 21) 
+			if (position == 16 || position == 22 || position == 28 || position == 33 || position == 27 || position == 21) 
 				curr.addTile(tiles.get(7));
-			else if (position == 17 || position == 23 || position == 29 || position == 34 || position == 28 || position == 22) 
+			if (position == 17 || position == 23 || position == 29 || position == 34 || position == 28 || position == 22) 
 				curr.addTile(tiles.get(8));
-			else if (position == 18 || position == 24 || position == 30 || position == 35 || position == 29 || position == 23) 
+			if (position == 18 || position == 24 || position == 30 || position == 35 || position == 29 || position == 23) 
 				curr.addTile(tiles.get(9));
-			else if (position == 19 || position == 25 || position == 31 || position == 36 || position == 30 || position == 24) 
+			if (position == 19 || position == 25 || position == 31 || position == 36 || position == 30 || position == 24) 
 				curr.addTile(tiles.get(10));
-			else if (position == 20 || position == 26 || position == 32 || position == 37 || position == 31 || position == 25) 
+			if (position == 20 || position == 26 || position == 32 || position == 37 || position == 31 || position == 25) 
 				curr.addTile(tiles.get(11));
-			else if (position == 28 || position == 34 || position == 39 || position == 43 || position == 38 || position == 33) 
+			if (position == 28 || position == 34 || position == 39 || position == 43 || position == 38 || position == 33) 
 				curr.addTile(tiles.get(12));
-			else if (position == 29 || position == 35 || position == 40 || position == 44 || position == 39 || position == 34) 
+			if (position == 29 || position == 35 || position == 40 || position == 44 || position == 39 || position == 34) 
 				curr.addTile(tiles.get(13));
-			else if (position == 30 || position == 36 || position == 41 || position == 45 || position == 40 || position == 35) 
+			if (position == 30 || position == 36 || position == 41 || position == 45 || position == 40 || position == 35) 
 				curr.addTile(tiles.get(14));
-			else if (position == 31 || position == 37 || position == 42 || position == 46 || position == 41 || position == 36) 
+			if (position == 31 || position == 37 || position == 42 || position == 46 || position == 41 || position == 36) 
 				curr.addTile(tiles.get(15));
-			else if (position == 39 || position == 44 || position == 48 || position == 51 || position == 47 || position == 43) 
+			if (position == 39 || position == 44 || position == 48 || position == 51 || position == 47 || position == 43) 
 				curr.addTile(tiles.get(16));
-			else if (position == 40 || position == 45 || position == 49 || position == 52 || position == 48 || position == 44) 
+			if (position == 40 || position == 45 || position == 49 || position == 52 || position == 48 || position == 44) 
 				curr.addTile(tiles.get(17));
-			else if (position == 41 || position == 46 || position == 50 || position == 53 || position == 49 || position == 45) 
+			if (position == 41 || position == 46 || position == 50 || position == 53 || position == 49 || position == 45) 
 				curr.addTile(tiles.get(18));
 		}
 	}
@@ -448,123 +441,6 @@ public class GameBoard extends JPanel {
 		}
 		
 
-	}
-	
-	private JScrollPane createTable() {
-		String[] columnNames = {"Player", "Brick", "Grain", "Lumber", "Ore", "Wool"};
-		Object[][] data = {
-			    {"Player 1 (blue)",  players.get(0).getBrick(), players.get(0).getGrain(), players.get(0).getLumber(), players.get(0).getOre(), players.get(0).getWool()},
-			    {"Player 2 (orange)", players.get(1).getBrick(), players.get(1).getGrain(), players.get(1).getLumber(), players.get(1).getOre(), players.get(1).getWool()},
-			    {"Player 2 (white)", players.get(2).getBrick(), players.get(2).getGrain(), players.get(2).getLumber(), players.get(2).getOre(), players.get(2).getWool()},
-			    {"Player 2 (red)", players.get(3).getBrick(), players.get(3).getGrain(), players.get(3).getLumber(), players.get(3).getOre(), players.get(3).getWool()}
-			};
-		
-		JTable table = new JTable(data, columnNames);
-		
-		//set the widths of each column
-		TableColumn column = null;
-		for (int i = 0; i < 5; i++) {
-		    column = table.getColumnModel().getColumn(i);
-		    if (i == 0)
-		    	column.setMinWidth(100);
-		    else if (i == 1)
-		    	column.setMinWidth(25);
-		    else if (i == 2)
-		    	column.setMinWidth(25);
-		    else if (i ==3)
-		    	column.setMinWidth(25);
-		    else
-		    	column.setMinWidth(25);
-		}
-		
-
-		table.setRowHeight(25);
-		JScrollPane tableScrollPane = new JScrollPane(table);
-		return tableScrollPane;
-
-	}
-	
-	private JPanel buildTable() {
-	    JScrollPane table = createTable();
-	    JPanel tablePanel = new JPanel();
-	    tablePanel.setBackground(Color.WHITE);
-	    tablePanel.setSize(150, 100);
-	    tablePanel.add(table);
-	    
-	    return tablePanel;
-	}
-	
-	private JPanel buildButtons() {
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setSize(100, 400);
-		
-		d1 = new JTextArea("Dice 1 value: ");
-		d2 = new JTextArea("Dice 2 value: ");
-		
-		
-	    JButton turn = new JButton("End turn");
-        turn.addActionListener(new ActionListener() { 
-            public void actionPerformed(ActionEvent e)
-            {
-            	if (currPlayerIndex == 3) 
-            		currPlayerIndex = 0;
-            	else
-            		currPlayerIndex += 1;
-            	repaint();
-                
-            }
-        });  
-        
-	    JButton build = new JButton("Build settlement");
-        build.addActionListener(new ActionListener() { 
-            public void actionPerformed(ActionEvent e)
-            {
-            	repaint();
-                
-            }
-        });  
-        
-		JButton roll = new JButton("Roll dice");
-        roll.addActionListener(new ActionListener() { 
-            public void actionPerformed(ActionEvent e)
-            {
-            	int dice1 = 1 + (int)(Math.random() * ((6 - 1) + 1));
-            	int dice2 = 1 + (int)(Math.random() * ((6 - 1) + 1));
-            	
-            	d1.setText("Dice 1 value: " + Integer.toString(dice1));
-            	d2.setText("Dice 2 value: "  + Integer.toString(dice2));
-            	repaint();
-                
-            }
-        });
-        
-		JButton upgrade = new JButton("Upgrade to city");
-		JButton trade = new JButton("Trade");
-		
-		buttonPanel.setBackground(Color.WHITE);
-	    buttonPanel.add(roll);
-	    buttonPanel.add(build);
-	    buttonPanel.add(upgrade);
-	    buttonPanel.add(trade);
-	    buttonPanel.add(turn);
-	    
-	    buttonPanel.add(d1);
-	    buttonPanel.add(d2);
-	    
-	    return buttonPanel;
-	}
-	
-	private void buildInfoPanel() {
-		infoPanel = new JPanel();
-		infoPanel.setSize(300, 600);
-		infoPanel.setLayout(new BorderLayout());
-		infoPanel.add(buildButtons(), BorderLayout.CENTER);
-		infoPanel.add(buildTable(), BorderLayout.SOUTH);
-		
-		infoPanel.setBounds(450, 0, 500, 600);
-		
-		add(infoPanel);
-		
 	}
 	
 	class Mouse extends MouseAdapter implements MouseMotionListener{

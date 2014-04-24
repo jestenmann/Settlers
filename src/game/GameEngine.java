@@ -1,5 +1,6 @@
 package game;
 import game.components.Corner;
+import game.components.DevelopmentCard;
 import game.components.Edge;
 import game.components.NumberToken;
 import game.components.Resource;
@@ -8,11 +9,13 @@ import game.players.Player;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class GameEngine {
 
-	private GameBoard board; 
+	private GameBoard board;
+	private InfoBoard infoBoard;
 	private Player p1;
 	private Player p2;
 	private Player p3;
@@ -20,9 +23,13 @@ public class GameEngine {
 	private ArrayList<Player> players;
 	private Player currPlayer;
 	
+	private ArrayList<DevelopmentCard> developmentCards;
+	
 	public GameInfo gameInfo;
 	
 	public GameEngine () {
+		
+		makeDevelopmentCards();
 		
 		players = new ArrayList<Player>();
 
@@ -38,14 +45,15 @@ public class GameEngine {
 		players.add(p3);
 		players.add(p4);
 
-		board = new GameBoard(players);
-		board.setPlayers(players);
+		board = new GameBoard();
 		
 		gameInfo = new GameInfo(board);
 		p1.setInfo(gameInfo);
 		p2.setInfo(gameInfo);
 		p3.setInfo(gameInfo);
 		p4.setInfo(gameInfo);
+		
+		infoBoard = new InfoBoard(players);
 		
 	}
 	
@@ -74,6 +82,8 @@ public class GameEngine {
 				}
 				
 				board.buildSettlement(settlement, currPlayer);
+				currPlayer.addVictoryPoint();
+				
 				edge = currPlayer.buildRoad();
 				while (!checkValidRoad(edge)) {
 					edge = currPlayer.buildRoad();
@@ -92,12 +102,275 @@ public class GameEngine {
 	}
 	
 	private void turn(Player player) {
-		//all the things that can be done in a turn
-		//resource production/allocation
-		//possibly moving the robber
-		//build
-		//buy development card
-		//trade?
+		currPlayer = player;
+		
+		/**
+		 * building stuff
+		 */
+		
+		//settlement
+		if (player.wantsToBuildSettlement()) { 
+			if (checkSettlementResources()) {
+				int settlement = player.buildSettlement();
+				if (checkValidSettlement(settlement)) {
+					board.buildSettlement(settlement, player);
+					player.setBrick(player.getBrick() - 1);
+					player.setLumber(player.getLumber() - 1);
+					player.setGrain(player.getGrain() - 1);
+					player.setWool(player.getWool() - 1);
+					currPlayer.addVictoryPoint();
+				}
+			}
+		}
+		
+		//development card 
+		if (developmentCards.size() > 0) {
+			if (player.wantsToBuildDevelopmentCard()) {
+				if (checkDevCardResources()) {
+						player.setGrain(player.getGrain() - 1);
+						player.setOre(player.getOre() - 1);
+						player.setWool(player.getWool()- 1);
+						DevelopmentCard d = developmentCards.remove(0);
+						player.addDevelopmentCard(d);
+					}
+				
+			}
+		}
+		
+		//city
+		if (player.wantsToBuildCity()) {
+			if (checkCityResources()) {
+				int city = player.buildCity();
+				if (checkValidCity(city)) {
+					board.buildCity(city, player);
+					player.setGrain(player.getGrain() - 2);
+					player.setOre(player.getOre() - 3);
+					currPlayer.addVictoryPoint();
+				}
+			}
+		}
+		
+		//road
+		if (player.wantsToBuildRoad()) {
+			if (checkRoadResources()) {
+				Edge edge = player.buildRoad();
+				if (checkValidRoad(edge)) {
+					board.buildRoad(edge, player);
+					player.setBrick(player.getBrick() - 1);
+					player.setLumber(player.getLumber() - 1);
+				}
+			}
+		}
+
+		//trade
+		
+		if (player.wantsToTrade()) {
+			Resource tradeAway = player.tradeAway();
+			Resource tradeFor = player.tradeFor();
+			
+			
+			if (tradeAway.equals(Resource.BRICK) && player.getBrick() >= 4) {
+				System.out.println("trading");
+				player.setBrick(player.getBrick() - 4);
+			}
+			else if (tradeAway.equals(Resource.GRAIN) && player.getGrain() >= 4) {
+				System.out.println("trading");
+				player.setGrain(player.getGrain() - 4);
+			}
+			else if (tradeAway.equals(Resource.LUMBER) && player.getLumber() >= 4) {
+				System.out.println("trading");
+				player.setBrick(player.getLumber() - 4);
+			}
+			else if (tradeAway.equals(Resource.ORE) && player.getOre() >= 4) {
+				System.out.println("trading");
+				player.setOre(player.getOre() - 4);
+			}
+			else if (tradeAway.equals(Resource.WOOL) && player.getWool() >= 4) {
+				System.out.println("trading");
+				player.setWool(player.getWool() - 4);
+			}
+			
+			if (tradeFor.equals(Resource.BRICK)) {
+				player.setBrick(player.getBrick() + 1);
+			}
+			else if (tradeFor.equals(Resource.GRAIN)) {
+				player.setGrain(player.getGrain() + 1);
+			}
+			else if (tradeFor.equals(Resource.LUMBER)) {
+				player.setBrick(player.getLumber() + 1);
+			}
+			else if (tradeFor.equals(Resource.ORE)) {
+				player.setOre(player.getOre() + 1);
+			}
+			else if (tradeFor.equals(Resource.WOOL)) {
+				player.setWool(player.getWool() + 1);
+			}
+			
+		}
+		
+		//play development card 
+		if (player.wantsToPlayDevelopmentCard()) {
+			if (player.hasDevelopmentCards()) {
+				DevelopmentCard d = player.playDevelopmentCard();
+				System.out.println(currPlayer + " " + d);
+				playDevelopmentCard(d);
+			}
+		}
+	}
+	
+	
+	
+	private void playDevelopmentCard(DevelopmentCard d) {
+		currPlayer.removeDevelopmentCard(d);
+		//do different stuff based on what development card it is
+		
+		if (d.equals(DevelopmentCard.VICTORY_POINT))
+		{
+			currPlayer.addVictoryPoint();
+		}
+		else if (d.equals(DevelopmentCard.KNIGHT)){
+			currPlayer.addKnight();
+		}
+		else if (d.equals(DevelopmentCard.ROAD_BUILDING)) {
+			//gets to build two free roads
+			Edge edge = currPlayer.buildRoad();
+			if (checkValidRoad(edge)) {
+				board.buildRoad(edge, currPlayer);
+			}
+			Edge e = currPlayer.buildRoad();
+			if(checkValidRoad(e)) {
+				board.buildRoad(e, currPlayer);
+			}
+		}
+		else if (d.equals(DevelopmentCard.YEAR_PLENTY)) {
+			//take two resource cards 
+			int resource = 0 + (int)(Math.random()*4); 
+			if (resource == 0)
+				currPlayer.setBrick(currPlayer.getBrick() + 1);
+			else if (resource == 1)
+				currPlayer.setGrain(currPlayer.getGrain() + 1);
+			else if (resource == 2)
+				currPlayer.setLumber(currPlayer.getLumber() + 1);
+			else if (resource == 3)
+				currPlayer.setOre(currPlayer.getOre() + 1);
+			else if (resource == 4)
+				currPlayer.setWool(currPlayer.getWool() + 1);
+		}
+		else if (d.equals(DevelopmentCard.MONOPOLY)) {
+			//get to pick a card to take from every other player
+			Resource r = currPlayer.pickMonopolyResource();
+			int count = 0;
+			for (int i = 0; i < players.size(); i++) {
+				Player p = players.get(i);
+				if (!(p.equals(currPlayer))) {
+					if (r.equals(Resource.BRICK)){
+						count = p.getBrick();
+						p.setBrick(0);
+						currPlayer.setBrick(currPlayer.getBrick() + count);
+					}
+					if (r.equals(Resource.GRAIN)){
+						count = p.getGrain();
+						p.setGrain(0);
+						currPlayer.setGrain(currPlayer.getGrain() + count);
+					}
+					if (r.equals(Resource.LUMBER)){
+						count = p.getLumber();
+						p.setLumber(0);
+						currPlayer.setLumber(currPlayer.getLumber() + count);
+					}
+					if (r.equals(Resource.ORE)){
+						count = p.getOre();
+						p.setOre(0);
+						currPlayer.setBrick(currPlayer.getOre() + count);
+					}
+					if (r.equals(Resource.WOOL)){
+						count = p.getWool();
+						p.setWool(0);
+						currPlayer.setWool(currPlayer.getWool() + count);
+					}
+				}
+			}
+		}
+		
+	}
+	
+	private boolean checkSettlementResources() {
+		if (currPlayer.getBrick() >= 1 && currPlayer.getLumber() >= 1 && currPlayer.getWool() >= 1 && currPlayer.getGrain() >= 1)
+			return true;
+		else
+			return false;
+	}
+	
+	private boolean checkRoadResources() {
+		if (currPlayer.getBrick() >= 1 && currPlayer.getLumber() >= 1)
+			return true;
+		else
+			return false;
+	}
+	
+	private boolean checkCityResources() {
+		if (currPlayer.getGrain() >= 2 && currPlayer.getOre() >= 3)
+			return true;
+		else
+			return false;
+	}
+	
+	private boolean checkDevCardResources() {
+		if (currPlayer.getWool() >= 1 && currPlayer.getGrain() >= 1 && currPlayer.getOre() >= 1)
+			return true;
+		else
+			return false;
+	}
+	
+	
+	
+	private boolean checkValidCity(int space) {
+		if (space == -1)
+			return false;
+		Corner curr = board.corners.get(space);
+		if (curr.hasCity())
+			return false;
+		return curr.getOwner().equals(currPlayer);
+	}
+	
+	private boolean checkValidSettlement(int space) {
+		//if no space has been picked return false
+		if (space == -1)
+			return false;
+		
+		Corner curr = board.corners.get(space);
+		
+		//check if someone else is on the settlement
+		if (curr.isOccupied())
+			return false;
+		
+		//check the distance rule
+		ArrayList<Edge> adjacentEdges = new ArrayList<Edge>();
+		
+		for (int i = 0; i < board.edges.size(); i++) {
+			Edge e = board.edges.get(i);
+			if (e.getBeginningCorner().equals(curr) || e.getEndCorner().equals(curr))
+				adjacentEdges.add(e);	
+		}
+		
+		for (int i = 0; i < adjacentEdges.size(); i++) {
+			Edge currEdge = adjacentEdges.get(i);
+			if (currEdge.getBeginningCorner().isOccupied() || currEdge.getEndCorner().isOccupied())
+				return false;
+		}
+		
+		//check if connected to a road
+		for (int i = 0; i < adjacentEdges.size(); i++) {
+			Edge currEdge = adjacentEdges.get(i);
+			if (currEdge.getOwner() != null) {
+				if (currEdge.getOwner().equals(currPlayer)) {
+					return true;
+			}
+			}
+		}
+		
+		return false;
+
 	}
 	
 	private boolean checkValidInitialSettlement(int space) {
@@ -112,8 +385,21 @@ public class GameEngine {
 			return false;
 		
 		//check the distance rule
+		ArrayList<Edge> adjacentEdges = new ArrayList<Edge>();
 		
-		else 
+		for (int i = 0; i < board.edges.size(); i++) {
+			Edge e = board.edges.get(i);
+			if (e.getBeginningCorner().equals(curr) || e.getEndCorner().equals(curr))
+				adjacentEdges.add(e);	
+		}
+		
+		for (int i = 0; i < adjacentEdges.size(); i++) {
+			Edge currEdge = adjacentEdges.get(i);
+			if (currEdge.getBeginningCorner().isOccupied() || currEdge.getEndCorner().isOccupied())
+				return false;
+		}
+		
+		//return true if everything is good 
 			return true;
 		
 	}
@@ -146,7 +432,7 @@ public class GameEngine {
 		//check to see it connects to a settlement
 		
 		Player beginningOwner = e.getBeginningCorner().getOwner();
-		Player endOwner = e.getBeginningCorner().getOwner();
+		Player endOwner = e.getEndCorner().getOwner();
 		
 		if (beginningOwner != null) {
 			if ((beginningOwner.equals(currPlayer))) {
@@ -166,20 +452,18 @@ public class GameEngine {
 		
 		for (int i = 0; i < board.edges.size(); i++) {
 			e = board.edges.get(i);
-			if (e.getBeginningCorner().equals(beginningCorner) && !(e.getEndCorner().equals(endCorner))) {
-				adjacentEdges.add(e);
+			//check if it's not the same edge
+			if (!(e.getBeginningCorner().equals(beginningCorner) && e.getEndCorner().equals(endCorner))) {
+				
+				if (beginningCorner.equals(e.getEndCorner()) || beginningCorner.equals(e.getBeginningCorner()))
+					adjacentEdges.add(e);
+				else if (endCorner.equals(e.getEndCorner()) || endCorner.equals(e.getEndCorner()))
+						adjacentEdges.add(e);
 			}
-			if (!(e.getBeginningCorner().equals(beginningCorner)) && e.getEndCorner().equals(endCorner)) {
-				adjacentEdges.add(e);
-			}
-			if (e.getBeginningCorner().equals(endCorner) || e.getEndCorner().equals(beginningCorner))
-				adjacentEdges.add(e);
 		}
 		
 		for (int i = 0; i < adjacentEdges.size(); i++) {
 			Edge curr = adjacentEdges.get(i);
-			//System.out.println(curr.getBeginningCorner());
-			//System.out.println(curr.getEndCorner());
 			if (curr.getOwner() != null) {
 				if (curr.getOwner().equals(currPlayer)) {
 					valid = true;
@@ -189,7 +473,6 @@ public class GameEngine {
 		}
 		
 		if (!valid) {
-			System.out.println("loop");
 			return false;
 		}
 		
@@ -201,11 +484,47 @@ public class GameEngine {
 		return board;
 	}
 	
+	public InfoBoard getInfoBoard() {
+		return infoBoard;
+	}
+	
 	public void run() {
 		setup();
-		rollDice();
-		//check winner
-		//go through a player's turn
+		int maxPoints = 0;
+		int winner = 0;
+		int numTurns = 0;
+		
+		while (currPlayer.getPoints() < 10) {
+			
+			/*winner = 0;
+			for (int i = 0; i < players.size(); i++) {
+				if (players.get(i).getPoints() > maxPoints) {
+					maxPoints = players.get(i).getPoints();
+					winner = i;
+				}
+			}*/
+			
+			for (int j = 0; j < players.size(); j++) {
+				currPlayer = players.get(j);
+				rollDice();
+				turn(players.get(j));
+				if (players.get(j).getPoints() >= 10) {
+					winner = j;
+					break;
+				}
+				numTurns++;
+				try {
+				    Thread.sleep(200);
+					} catch(InterruptedException ex) {
+					    Thread.currentThread().interrupt();
+					}
+			}
+			
+			
+		}
+		System.out.println(numTurns);
+		System.out.println(currPlayer.getPoints());
+		System.out.println(players.get(winner));
 	}
 	
 	private void rollDice() {
@@ -213,7 +532,7 @@ public class GameEngine {
 		//roll the dice 
 		int dice1 = 1 + (int)(Math.random() * ((6 - 1) + 1));
 		int dice2 = 1 + (int)(Math.random() * ((6 - 1) + 1));
-		board.setDice(dice1, dice2);
+		infoBoard.setDice(dice1, dice2);
 		
 		int sum = dice1 + dice2;
 		
@@ -224,31 +543,67 @@ public class GameEngine {
 		}
 		//robber
 		else {
-			System.out.println("Robber!");
+			System.out.println("Sum: " + sum + ", move robber");
+			board.moveRobber(currPlayer.moveRobber());
+			halveResources();
+		}
+	}
+	
+	private void halveResources() {
+		for (int i = 0; i < players.size(); i++) {
+			Player p = players.get(i);
+			
+			if ((p.getBrick() + p.getGrain() + p.getLumber() + p.getOre() + p.getWool()) > 7) {
+				p.halveResources();
+			}
+				
 		}
 	}
 	
 	private void updateResources(int sum) {
-		System.out.println("beginning resources update");
 		for (int i = 0; i < board.corners.size(); i++) {
 			Corner c = board.corners.get(i);
 			ArrayList<Tile> tiles = c.getTiles();
-			
 			for (int j = 0; j < tiles.size(); j++) {
 				Tile t = tiles.get(j);
-				NumberToken n = t.getNumberToken();
-				if (n != null) {
-					if (n.getNumber() == sum) {
-						Resource r = t.getResource();
-						Player owner = c.getOwner();
-						if (owner != null)
-							owner.updateResource(r);
+				if (!t.hasRobber()) {
+					NumberToken n = t.getNumberToken();
+					if (n != null) {
+						if (n.getNumber() == sum) {
+							Resource r = t.getResource();
+							Player owner = c.getOwner();
+							if (owner != null) {
+								owner.updateResource(r);
+							}
+						}
 					}
 				}
 			}
 		}
-		System.out.println("resources updated");
+
 		//update the resources in the game board 
-		board.updateResources(players);
+		infoBoard.updateResources(players);
+	}
+	
+	private void makeDevelopmentCards() {
+		developmentCards = new ArrayList<DevelopmentCard>();
+		
+		for (int i = 0; i < 14; i++) {
+			developmentCards.add(DevelopmentCard.KNIGHT);
+		}
+		
+		developmentCards.add(DevelopmentCard.MONOPOLY);
+		developmentCards.add(DevelopmentCard.MONOPOLY);
+		
+		developmentCards.add(DevelopmentCard.ROAD_BUILDING);
+		developmentCards.add(DevelopmentCard.ROAD_BUILDING);
+		
+		developmentCards.add(DevelopmentCard.YEAR_PLENTY);
+		developmentCards.add(DevelopmentCard.YEAR_PLENTY);
+		
+		developmentCards.add(DevelopmentCard.VICTORY_POINT);
+		developmentCards.add(DevelopmentCard.VICTORY_POINT);
+		
+		Collections.shuffle(developmentCards);
 	}
 }

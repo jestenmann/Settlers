@@ -25,6 +25,9 @@ public class Tile extends JComponent {
 
 	}
 	
+	public boolean hasRobber() {
+		return hasRobber;
+	}
 
 	public NumberToken getNumberToken() {
 		return numberToken;
@@ -38,10 +41,14 @@ public class Tile extends JComponent {
 	}
 	
 	public void placeRobber() {
+		if (numberToken != null)
+			remove(numberToken);
 		hasRobber = true;
 	}
 	
 	public void removeRobber() {
+		if (!(resource.equals(Resource.NONE)))
+			add(numberToken);
 		hasRobber = false;
 	}
 	
@@ -75,6 +82,13 @@ public class Tile extends JComponent {
 		
 		g.setColor(Color.BLACK);
 		g2D.drawString(resource.toString(), 23, 30);
+		
+		if (hasRobber) {
+			g.setColor(Color.BLACK);
+			g.fillOval(30, 20, 20, 20);
+			g.fillOval(25, 30, 30, 40);
+			g.fillRect(25, 65, 30, 5);
+		}
 		
 	}
 

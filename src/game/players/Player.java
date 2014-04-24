@@ -3,12 +3,14 @@ package game.players;
 
 
 import game.GameInfo;
+import game.components.Corner;
 import game.components.DevelopmentCard;
 import game.components.Edge;
 import game.components.Resource;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class Player {
@@ -31,6 +33,9 @@ public class Player {
 	
 	//array list of all the development cards the player has 
 	private ArrayList<DevelopmentCard> developmentCards;
+	
+	private int knights;
+	private int roadLength;
 
 	public Player(Color color) {
 		this.color = color;
@@ -43,6 +48,8 @@ public class Player {
 		largestArmy = false;
 		longestRoad = false;
 		points = 0;
+		knights = 0;
+		roadLength = 0;
 		
 		developmentCards = new ArrayList<DevelopmentCard>();
 		
@@ -64,6 +71,26 @@ public class Player {
 		this.color = color;
 	}
 	
+	public void setBrick(int x) {
+		resources[0] = x;
+	}
+	
+	public void setGrain(int x) {
+		resources[1] = x;
+	}
+	
+	public void setLumber(int x) {
+		resources[2] = x;
+	}
+	
+	public void setOre(int x) {
+		resources[3] = x;
+	}
+	
+	public void setWool(int x) {
+		resources[4] = x;
+	}
+	
 	public int getBrick() {
 		return resources[0];
 	}
@@ -83,6 +110,10 @@ public class Player {
 	public int getWool() {
 		return resources[4];
 	}
+	
+	public int getPoints() {
+		return points;
+	}
 
 	public String toString() {
 		return color.toString();
@@ -101,14 +132,66 @@ public class Player {
 			resources[4] = resources[4] + 1;
 	}
 	
+	public void removeDevelopmentCard (DevelopmentCard d) {
+		
+		developmentCards.remove(d);
+	}
+	
+	public void addKnight() {
+		knights++;
+	}
+	
+	public void addVictoryPoint() {
+		points++;
+	}
+	
+	public void addDevelopmentCard(DevelopmentCard d) {
+		developmentCards.add(d);
+		
+	}
+	
+	public boolean hasDevelopmentCards() {
+		return developmentCards.size() > 0;
+	}
+	
+	public boolean wantsToBuildRoad() {
+		return true;
+	}
+	
+	public boolean wantsToBuildSettlement() {
+		return true;
+	}
+	
+	public boolean wantsToBuildCity() {
+		return true;
+	}
+	
+	public boolean wantsToBuildDevelopmentCard() {
+		return true;
+	}
+	
+	public boolean wantsToPlayDevelopmentCard() {
+		return true;
+	}
+	
+	public boolean wantsToTrade() {
+		return true;
+	}
+	
 	/**
-	 * Below are all the methods used to make moves 
-	 * 
+	 * Below are all the methods used to make moves - override these 
 	 */
 
 	//returns the number of the corner to place the settlement at 
 	public int buildInitialSettlement() {
+
 		return 0 + (int)(Math.random()*53); 
+	}
+	
+	public int buildSettlement() {
+		
+		int	space = 0 + (int)(Math.random()*53); 
+		return space;
 	}
 	
 	//returns an edge where the road should be placed (from lower index to higher index)
@@ -133,19 +216,23 @@ public class Player {
 		
 	}
 	
-	//returns the number of the corner to place the settlement at 
-	public int buildSettlement() {
-		return -1;
-	}
 	
 	//returns the number of the corner to build the city
 	public int buildCity() {
-		return -1;
-	}
-	
-	//gets a development card 
-	public void getDevelopmentCard() {
+		ArrayList<Integer> mySettlements = new ArrayList<Integer>();
+		for (int i = 0; i < info.board.corners.size(); i++) {
+			Corner c = info.board.corners.get(i);
+			if (c.getOwner() != null){
+				if (c.getOwner().equals(this)) {
+					
+					mySettlements.add(i);
+					
+				}
+			}
+		}
 		
+		Collections.shuffle(mySettlements);
+		return mySettlements.get(0);
 	}
 	
 	//trade
@@ -154,10 +241,71 @@ public class Player {
 	}
 	
 	//plays a development card 
-	public void playDevelopmentCard() {
+	public DevelopmentCard playDevelopmentCard() {
+		Collections.shuffle(developmentCards);
+		if (developmentCards.size() > 0) {
+			return developmentCards.get(0);
+		}
 		
+		return null;
 	}
 	
+	//returns the resource to get a monopoly of if the development card is played
+	public Resource pickMonopolyResource() {
+		int resource = 0 + (int)(Math.random()*4); 
+		if (resource == 0)
+			return Resource.BRICK;
+		else if (resource == 1)
+			return Resource.GRAIN;
+		else if (resource == 2)
+			return Resource.LUMBER;
+		else if (resource == 3)
+			return Resource.ORE;
+		else
+			return Resource.WOOL;
+	}
 	
+	//returns the tile to move the robber to
+	public int moveRobber() {
+		return (int)(Math.random()*18);
+	}
 	
+	//gets rid of half of your resources if they are over 7
+	public void halveResources() {
+		setBrick((int)getBrick()/2);
+		setGrain((int)getGrain()/2);
+		setLumber((int)getLumber()/2);
+		setOre((int)getOre()/2);
+		setOre((int)getOre()/2);
+	}
+	
+	//pick a resource to trade away
+	public Resource tradeAway() {
+		int resource = 0 + (int)(Math.random()*4); 
+		if (resource == 0)
+			return Resource.BRICK;
+		else if (resource == 1)
+			return Resource.GRAIN;
+		else if (resource == 2)
+			return Resource.LUMBER;
+		else if (resource == 3)
+			return Resource.ORE;
+		else
+			return Resource.WOOL;
+	}
+	
+	//pick a resource to trade for 
+	public Resource tradeFor() {
+		int resource = 0 + (int)(Math.random()*4); 
+		if (resource == 0)
+			return Resource.BRICK;
+		else if (resource == 1)
+			return Resource.GRAIN;
+		else if (resource == 2)
+			return Resource.LUMBER;
+		else if (resource == 3)
+			return Resource.ORE;
+		else
+			return Resource.WOOL;
+	}
 }

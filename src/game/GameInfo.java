@@ -24,11 +24,7 @@ public class GameInfo {
 	public ArrayList<Corner> getCorners() {
 		return board.corners;
 	}
-	
-	//I want all the corners a certain player owns 
-	public ArrayList<Corner> getPlayersCorners(Player owner) {
-		return board.corners;
-	}
+
 
 
 }

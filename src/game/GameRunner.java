@@ -29,8 +29,8 @@ public class GameRunner extends JFrame {
 		
 	
 		GameRunner frame = new GameRunner();
-		
-		
+
+		frame.getContentPane().add(engine.getInfoBoard(), BorderLayout.EAST);
 		frame.getContentPane().add(engine.getBoard(), BorderLayout.CENTER);
 		
 		//display the window.

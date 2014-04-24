@@ -2,8 +2,10 @@ package game.components;
 
 import game.players.Player;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 
@@ -38,6 +40,10 @@ public class Corner extends JComponent {
 	public void buildSettlement(Player p) {
 		owner = p;
 		hasSettlement = true;
+	}
+	
+	public boolean hasCity() {
+		return hasCity;
 	}
 	
 	public Point getPoint() {
@@ -96,7 +102,29 @@ public class Corner extends JComponent {
 			g.drawRect(0, 0, 20, 20);
 		}
 		else if (hasCity) {
-			//drawing for city
+			g.setColor(owner.getColor());
+			g.fillRect(0, 0, 20, 20);
+			g.setColor(Color.BLACK);
+			g.drawRect(0, 0, 20, 20);
+
+			Graphics2D g2D = (Graphics2D) g; 
+			if (owner.getColor().equals(Color.BLUE))
+				g2D.setColor(Color.WHITE);
+			else
+				g2D.setColor(Color.BLACK);
+			g2D.setStroke(new BasicStroke(1));
+			
+			int w = 0;
+			int h = 0;
+			
+			while (w <=20 && h <=20) {
+				g2D.drawLine(0, h, 20, h);
+				g2D.drawLine(w, 0, w, 20);
+				
+				h+=4;
+				w+=4;
+			}
+			
 		}
 	}
 }
