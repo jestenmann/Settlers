@@ -24,6 +24,9 @@ public class GameEngine {
 	private ArrayList<Player> players;
 	private Player currPlayer;
 	
+	private int largestArmy;
+	private int longestRoad;
+	
 	private ArrayList<DevelopmentCard> developmentCards;
 	
 	public GameInfo gameInfo;
@@ -56,6 +59,9 @@ public class GameEngine {
 		
 		infoBoard = new InfoBoard(players);
 		
+		largestArmy= 0;
+		longestRoad = 0;
+		
 	}
 	
 
@@ -76,11 +82,11 @@ public class GameEngine {
 					settlement = currPlayer.buildInitialSettlement();
 				}
 				
-				try {
+				/*try {
 				    Thread.sleep(1000);
 				} catch(InterruptedException ex) {
 				    Thread.currentThread().interrupt();
-				}
+				}*/
 				
 				board.buildSettlement(settlement, currPlayer);
 				currPlayer.addVictoryPoint();
@@ -90,11 +96,11 @@ public class GameEngine {
 					edge = currPlayer.buildRoad();
 				}
 				
-				try {
+				/*try {
 			    Thread.sleep(1000);
 				} catch(InterruptedException ex) {
 				    Thread.currentThread().interrupt();
-				}
+				}*/
 				board.buildRoad(edge, currPlayer);
 
 				
@@ -119,7 +125,9 @@ public class GameEngine {
 					player.setLumber(player.getLumber() - 1);
 					player.setGrain(player.getGrain() - 1);
 					player.setWool(player.getWool() - 1);
+					System.out.println("built settlement");
 					currPlayer.addVictoryPoint();
+					
 				}
 			}
 		}
@@ -146,6 +154,7 @@ public class GameEngine {
 					board.buildCity(city, player);
 					player.setGrain(player.getGrain() - 2);
 					player.setOre(player.getOre() - 3);
+					System.out.println("built city");
 					currPlayer.addVictoryPoint();
 				}
 			}
@@ -217,6 +226,10 @@ public class GameEngine {
 				playDevelopmentCard(d);
 			}
 		}
+		
+		//check for change in longest road and largest army
+		checkLargestArmy();
+		checkLongestRoad();
 	}
 	
 	
@@ -227,6 +240,7 @@ public class GameEngine {
 		
 		if (d.equals(DevelopmentCard.VICTORY_POINT))
 		{
+			System.out.println("victory point development card");
 			currPlayer.addVictoryPoint();
 		}
 		else if (d.equals(DevelopmentCard.KNIGHT)){
@@ -509,13 +523,16 @@ public class GameEngine {
 				currPlayer = players.get(j);
 				rollDice();
 				turn(players.get(j));
+				
+				//check victory points after 
 				if (players.get(j).getPoints() >= 10) {
 					winner = j;
 					break;
 				}
+				System.out.println(players.get(j) + " " + players.get(j).getPoints());
 				numTurns++;
 				try {
-				    Thread.sleep(200);
+				    Thread.sleep(0);
 					} catch(InterruptedException ex) {
 					    Thread.currentThread().interrupt();
 					}
@@ -524,8 +541,28 @@ public class GameEngine {
 			
 		}
 		//System.out.println(numTurns);
-		//System.out.println(currPlayer.getPoints());
-		//System.out.println(players.get(winner));
+		System.out.println(players.get(winner));
+	}
+	
+	public void checkLargestArmy() {
+		if (currPlayer.getArmySize() > largestArmy) {		
+			for (int i = 0; i < players.size(); i++) {
+				if (players.get(i).hasLargestArmy()) {
+					players.get(i).setLargestArmy(false);
+					players.get(i).removeVictoryPoint();
+				}
+			}
+			
+			currPlayer.setLargestArmy(true);
+			currPlayer.addVictoryPoint();
+			largestArmy = currPlayer.getArmySize();
+			
+		}
+		
+	}
+	
+	public void checkLongestRoad() {
+		
 	}
 	
 	private void rollDice() {

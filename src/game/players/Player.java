@@ -116,7 +116,17 @@ public class Player {
 	}
 
 	public String toString() {
-		return color.toString();
+		if (color.equals(Color.RED)){
+			return "Red";
+		}
+		else if (color.equals(Color.BLUE)) {
+			return "Blue";
+		}
+		else if (color.equals(Color.WHITE)){
+			return "White";
+		}
+		else
+			return "Orange";
 	}
 	
 	public void updateResource (Resource r) {
@@ -137,21 +147,46 @@ public class Player {
 		developmentCards.remove(d);
 	}
 	
+	public void setLargestArmy(boolean b) {
+		largestArmy = b;
+	}
+	
+	public void setLongestRoad(boolean b) {
+		longestRoad = b;
+	}
+	
 	public void addKnight() {
 		knights++;
 	}
 	
 	public void addVictoryPoint() {
 		points++;
+		System.out.println("victory point added");
 	}
 	
 	public void addDevelopmentCard(DevelopmentCard d) {
 		developmentCards.add(d);
 		
 	}
-	
+
 	public boolean hasDevelopmentCards() {
 		return developmentCards.size() > 0;
+	}
+	
+	public int getArmySize() {
+		return knights;
+	}
+	
+	public void removeVictoryPoint() {
+		points--;
+	}
+	
+	public boolean hasLargestArmy() {
+		return largestArmy;
+	}
+	
+	public boolean hasLongestRoad() {
+		return longestRoad;
 	}
 	
 	public boolean wantsToBuildRoad() {
