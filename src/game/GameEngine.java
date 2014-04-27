@@ -5,6 +5,7 @@ import game.components.Edge;
 import game.components.NumberToken;
 import game.components.Resource;
 import game.components.Tile;
+import game.players.AIPlayer;
 import game.players.Player;
 
 import java.awt.Color;
@@ -34,10 +35,10 @@ public class GameEngine {
 		players = new ArrayList<Player>();
 
 		//use this to add AI strategy in the Player class 
-		p1 = new Player(Color.BLUE);
-		p2 = new Player(Color.ORANGE);
-		p3 = new Player(Color.WHITE);
-		p4 = new Player(Color.RED);
+		p1 = new AIPlayer(Color.BLUE);
+		p2 = new AIPlayer(Color.ORANGE);
+		p3 = new AIPlayer(Color.WHITE);
+		p4 = new AIPlayer(Color.RED);
 		
 		
 		players.add(p1);
@@ -170,23 +171,23 @@ public class GameEngine {
 			
 			
 			if (tradeAway.equals(Resource.BRICK) && player.getBrick() >= 4) {
-				System.out.println("trading");
+				//System.out.println("trading");
 				player.setBrick(player.getBrick() - 4);
 			}
 			else if (tradeAway.equals(Resource.GRAIN) && player.getGrain() >= 4) {
-				System.out.println("trading");
+				//System.out.println("trading");
 				player.setGrain(player.getGrain() - 4);
 			}
 			else if (tradeAway.equals(Resource.LUMBER) && player.getLumber() >= 4) {
-				System.out.println("trading");
+				//System.out.println("trading");
 				player.setBrick(player.getLumber() - 4);
 			}
 			else if (tradeAway.equals(Resource.ORE) && player.getOre() >= 4) {
-				System.out.println("trading");
+				//System.out.println("trading");
 				player.setOre(player.getOre() - 4);
 			}
 			else if (tradeAway.equals(Resource.WOOL) && player.getWool() >= 4) {
-				System.out.println("trading");
+				//System.out.println("trading");
 				player.setWool(player.getWool() - 4);
 			}
 			
@@ -212,7 +213,7 @@ public class GameEngine {
 		if (player.wantsToPlayDevelopmentCard()) {
 			if (player.hasDevelopmentCards()) {
 				DevelopmentCard d = player.playDevelopmentCard();
-				System.out.println(currPlayer + " " + d);
+				//System.out.println(currPlayer + " " + d);
 				playDevelopmentCard(d);
 			}
 		}
@@ -522,9 +523,9 @@ public class GameEngine {
 			
 			
 		}
-		System.out.println(numTurns);
-		System.out.println(currPlayer.getPoints());
-		System.out.println(players.get(winner));
+		//System.out.println(numTurns);
+		//System.out.println(currPlayer.getPoints());
+		//System.out.println(players.get(winner));
 	}
 	
 	private void rollDice() {
@@ -543,7 +544,7 @@ public class GameEngine {
 		}
 		//robber
 		else {
-			System.out.println("Sum: " + sum + ", move robber");
+			//System.out.println("Sum: " + sum + ", move robber");
 			board.moveRobber(currPlayer.moveRobber());
 			halveResources();
 		}
