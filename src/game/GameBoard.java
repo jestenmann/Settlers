@@ -43,6 +43,9 @@ public class GameBoard extends JPanel {
 	private int yStart = 50;
 	
 	int settlement;
+	boolean turnOver;
+	int start;
+	int end;
 	
 	public GameBoard() {
 
@@ -66,7 +69,9 @@ public class GameBoard extends JPanel {
 	    addMouseMotionListener(mouseHandler);
 	    
 	    settlement = 0;
-
+	    start = 0;
+	    end = 0;
+	   	turnOver = true;
 	}
 	
 	public void setCurrPlayer(Player p) {
@@ -164,71 +169,71 @@ public class GameBoard extends JPanel {
 		int cornerY = yStart - 10;
 		
 		//setting all the bounds of the corners 
-		corners.get(0).setBounds(cornerX + 120, cornerY, 100, 100);
-		corners.get(1).setBounds(cornerX + 200, cornerY, 100, 100);
-		corners.get(2).setBounds(cornerX + 280, cornerY, 100, 100);
+		corners.get(0).setBounds(cornerX + 120, cornerY, 30, 30);
+		corners.get(1).setBounds(cornerX + 200, cornerY, 30, 30);
+		corners.get(2).setBounds(cornerX + 280, cornerY, 30, 30);
 		
-		corners.get(3).setBounds(cornerX + 80, cornerY + 25, 100, 100);
-		corners.get(4).setBounds(cornerX + 160, cornerY + 25, 100, 100);
-		corners.get(5).setBounds(cornerX + 240, cornerY + 25, 100, 100);
-		corners.get(6).setBounds(cornerX + 320, cornerY + 25, 100, 100);
+		corners.get(3).setBounds(cornerX + 80, cornerY + 25, 30, 30);
+		corners.get(4).setBounds(cornerX + 160, cornerY + 25, 30, 30);
+		corners.get(5).setBounds(cornerX + 240, cornerY + 25, 30, 30);
+		corners.get(6).setBounds(cornerX + 320, cornerY + 25, 30, 30);
 		
-		corners.get(7).setBounds(cornerX + 80, cornerY + 70, 100, 100);
-		corners.get(8).setBounds(cornerX + 160, cornerY + 70, 100, 100);
-		corners.get(9).setBounds(cornerX + 240, cornerY + 70, 100, 100);
-		corners.get(10).setBounds(cornerX + 320, cornerY + 70, 100, 100);
+		corners.get(7).setBounds(cornerX + 80, cornerY + 70, 30, 30);
+		corners.get(8).setBounds(cornerX + 160, cornerY + 70, 30, 30);
+		corners.get(9).setBounds(cornerX + 240, cornerY + 70, 30, 30);
+		corners.get(10).setBounds(cornerX + 320, cornerY + 70, 30, 30);
 		
-		corners.get(11).setBounds(cornerX + 40, cornerY + 95, 100, 100);
-		corners.get(12).setBounds(cornerX + 120, cornerY + 95, 100, 100);
-		corners.get(13).setBounds(cornerX + 200, cornerY + 95, 100, 100);
-		corners.get(14).setBounds(cornerX + 280, cornerY + 95, 100, 100);
-		corners.get(15).setBounds(cornerX + 360, cornerY + 95, 100, 100);
+		corners.get(11).setBounds(cornerX + 40, cornerY + 95, 30, 30);
+		corners.get(12).setBounds(cornerX + 120, cornerY + 95, 30, 30);
+		corners.get(13).setBounds(cornerX + 200, cornerY + 95, 30, 30);
+		corners.get(14).setBounds(cornerX + 280, cornerY + 95, 30, 30);
+		corners.get(15).setBounds(cornerX + 360, cornerY + 95, 30, 30);
 		
-		corners.get(16).setBounds(cornerX + 40, cornerY + 140, 100, 100);
-		corners.get(17).setBounds(cornerX + 120, cornerY + 140, 100, 100);
-		corners.get(18).setBounds(cornerX + 200, cornerY + 140, 100, 100);
-		corners.get(19).setBounds(cornerX + 280, cornerY + 140, 100, 100);
-		corners.get(20).setBounds(cornerX + 360, cornerY + 140, 100, 100);
+		corners.get(16).setBounds(cornerX + 40, cornerY + 140, 30, 30);
+		corners.get(17).setBounds(cornerX + 120, cornerY + 140, 30, 30);
+		corners.get(18).setBounds(cornerX + 200, cornerY + 140, 30, 30);
+		corners.get(19).setBounds(cornerX + 280, cornerY + 140, 30, 30);
+		corners.get(20).setBounds(cornerX + 360, cornerY + 140, 30, 30);
 		
-		corners.get(21).setBounds(cornerX, cornerY + 165, 100, 100);
-		corners.get(22).setBounds(cornerX + 80, cornerY + 165, 100, 100);
-		corners.get(23).setBounds(cornerX + 160, cornerY + 165, 100, 100);
-		corners.get(24).setBounds(cornerX + 240, cornerY + 165, 100, 100);
-		corners.get(25).setBounds(cornerX + 320, cornerY + 165, 100, 100);
-		corners.get(26).setBounds(cornerX + 400, cornerY + 165, 100, 100);
+		corners.get(21).setBounds(cornerX, cornerY + 165, 30, 30);
+		corners.get(22).setBounds(cornerX + 80, cornerY + 165, 30, 30);
+		corners.get(23).setBounds(cornerX + 160, cornerY + 165, 30, 30);
+		corners.get(24).setBounds(cornerX + 240, cornerY + 165, 30, 30);
+		corners.get(25).setBounds(cornerX + 320, cornerY + 165, 30, 30);
+		corners.get(26).setBounds(cornerX + 400, cornerY + 165, 30, 30);
 		
-		corners.get(27).setBounds(cornerX, cornerY + 210, 100, 100);
-		corners.get(28).setBounds(cornerX + 80, cornerY + 210, 100, 100);
-		corners.get(29).setBounds(cornerX + 160, cornerY + 210, 100, 100);
-		corners.get(30).setBounds(cornerX + 240, cornerY + 210, 100, 100);
-		corners.get(31).setBounds(cornerX + 320, cornerY + 210, 100, 100);
-		corners.get(32).setBounds(cornerX + 400, cornerY + 210, 100, 100);
+		corners.get(27).setBounds(cornerX, cornerY + 210, 30, 30);
+		corners.get(28).setBounds(cornerX + 80, cornerY + 210, 30, 30);
+		corners.get(29).setBounds(cornerX + 160, cornerY + 210, 30, 30);
+		corners.get(30).setBounds(cornerX + 240, cornerY + 210, 30, 30);
+		corners.get(31).setBounds(cornerX + 320, cornerY + 210, 30, 30);
+		corners.get(32).setBounds(cornerX + 400, cornerY + 210, 30, 30);
 		
-		corners.get(33).setBounds(cornerX + 40, cornerY + 235, 100, 100);
-		corners.get(34).setBounds(cornerX + 120, cornerY + 235, 100, 100);
-		corners.get(35).setBounds(cornerX + 200, cornerY + 235, 100, 100);
-		corners.get(36).setBounds(cornerX + 280, cornerY + 235, 100, 100);
-		corners.get(37).setBounds(cornerX + 360, cornerY + 235, 100, 100);
+		corners.get(33).setBounds(cornerX + 40, cornerY + 235, 30, 30);
+		corners.get(34).setBounds(cornerX + 120, cornerY + 235, 30, 30);
+		corners.get(35).setBounds(cornerX + 200, cornerY + 235, 30, 30);
+		corners.get(36).setBounds(cornerX + 280, cornerY + 235, 30, 30);
+		corners.get(37).setBounds(cornerX + 360, cornerY + 235, 30, 30);
 		
-		corners.get(38).setBounds(cornerX + 40, cornerY + 285, 100, 100);
-		corners.get(39).setBounds(cornerX + 120, cornerY + 285, 100, 100);
-		corners.get(40).setBounds(cornerX + 200, cornerY + 285, 100, 100);
-		corners.get(41).setBounds(cornerX + 280, cornerY + 285, 100, 100);
-		corners.get(42).setBounds(cornerX + 360, cornerY + 285, 100, 100);
+		corners.get(38).setBounds(cornerX + 40, cornerY + 285, 30, 30);
+		corners.get(39).setBounds(cornerX + 120, cornerY + 285, 30, 30);
+		corners.get(40).setBounds(cornerX + 200, cornerY + 285, 30, 30);
+		corners.get(41).setBounds(cornerX + 280, cornerY + 285, 30, 30);
+		corners.get(42).setBounds(cornerX + 360, cornerY + 285, 30, 30);
 		
-		corners.get(43).setBounds(cornerX + 80, cornerY + 310, 100, 100);
-		corners.get(44).setBounds(cornerX + 160, cornerY + 310, 100, 100);
-		corners.get(45).setBounds(cornerX + 240, cornerY + 310, 100, 100);
-		corners.get(46).setBounds(cornerX + 320, cornerY + 310, 100, 100);
+		corners.get(43).setBounds(cornerX + 80, cornerY + 310, 30, 30);
+		corners.get(44).setBounds(cornerX + 160, cornerY + 310, 30, 30);
+		corners.get(45).setBounds(cornerX + 240, cornerY + 310, 30, 30);
+		corners.get(46).setBounds(cornerX + 320, cornerY + 310, 30, 30);
 		
-		corners.get(47).setBounds(cornerX + 80, cornerY + 355, 100, 100);
-		corners.get(48).setBounds(cornerX + 160, cornerY + 355, 100, 100);
-		corners.get(49).setBounds(cornerX + 240, cornerY + 355, 100, 100);
-		corners.get(50).setBounds(cornerX + 320, cornerY +  355, 100, 100);
+		corners.get(47).setBounds(cornerX + 80, cornerY + 355, 30, 30);
+		corners.get(48).setBounds(cornerX + 160, cornerY + 355, 30, 30);
+		corners.get(49).setBounds(cornerX + 240, cornerY + 355, 30, 30);
+		corners.get(50).setBounds(cornerX + 320, cornerY +  355, 30, 30);
 		
-		corners.get(51).setBounds(cornerX + 120, cornerY + 380, 100, 100);
-		corners.get(52).setBounds(cornerX + 200, cornerY + 380, 100, 100);
-		corners.get(53).setBounds(cornerX + 280, cornerY + 380, 100, 100);
+		corners.get(51).setBounds(cornerX + 120, cornerY + 380, 30, 30);
+		corners.get(52).setBounds(cornerX + 200, cornerY + 380, 30, 30);
+		corners.get(53).setBounds(cornerX + 280, cornerY + 380, 30, 30);
 		
 		for (int i = 0; i <54; i++) {
 			Corner curr = corners.get(i);
@@ -447,25 +452,36 @@ public class GameBoard extends JPanel {
 		
 		public void mouseClicked(MouseEvent e){
 			Point p = e.getPoint();
-			System.out.println(corners.get(0).getPoint());
 			System.out.println(p);
 			
 			for (int i = 0; i < corners.size(); i++) {
+				Corner c = corners.get(i);
+			
+				if (c.getBounds().contains(p)) {
+					settlement = i;
+					start = i;
+					end = i;
+				}
+			}
+			
+			/*for (int i = 0; i < corners.size(); i++) {
 				if (Math.abs(corners.get(i).getPoint().getX() - p.getX()) < 20) {
 					if (Math.abs(corners.get(i).getPoint().getY() - p.getY()) < 20) {
 						
 						System.out.println(i);
 						settlement = i;
 						
-						/*corners.get(i).setBounds((int)p.getX()-10, (int)p.getY()-10, 100, 100);
+						corners.get(i).setBounds((int)p.getX()-10, (int)p.getY()-10, 100, 100);
 						
 						corners.get(i).buildSettlement(currPlayer);
 
-						repaint();*/
+						repaint();
 					}
 				}
 					
-			}
+			}*/
+			turnOver = true;
+			repaint();
 			
 		}
 	

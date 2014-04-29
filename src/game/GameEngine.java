@@ -13,6 +13,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 
 public class GameEngine {
 
@@ -31,6 +34,10 @@ public class GameEngine {
 	ArrayList<DevelopmentCard> developmentCards;
 	
 	public GameInfo gameInfo;
+	boolean wantToBuildSettlement;
+	boolean wantToBuildCity;
+	boolean wantToBuildRoad;
+	int start;
 	
 	public GameEngine () {
 		
@@ -547,6 +554,18 @@ public class GameEngine {
 					
 					while(!turnOver) {
 						turnOver = infoBoard.turnOver;
+						
+						if (wantToBuildSettlement && board.settlement != 0) {
+							playerBuildSettlement();
+						}
+						
+						if(wantToBuildRoad && board.settlement != 0) {
+							playerBuildRoad();
+						}
+						
+						if (wantToBuildCity && board.settlement != 0) {
+							playerBuildCity();
+						}
 					}
 				}
 				else 
@@ -680,5 +699,72 @@ public class GameEngine {
 		developmentCards.add(DevelopmentCard.VICTORY_POINT);
 		
 		Collections.shuffle(developmentCards);
+	}
+	
+	public void playerBuildSettlement() {
+		int settlement = board.settlement;
+		
+		
+		if (this.checkValidSettlement(settlement)) {
+			board.buildSettlement(settlement, currPlayer);
+			currPlayer.setBrick(currPlayer.getBrick() - 1);
+			currPlayer.setLumber(currPlayer.getLumber() - 1);
+			currPlayer.setGrain(currPlayer.getGrain() - 1);
+			currPlayer.setWool(currPlayer.getWool() - 1);
+			System.out.println("built settlement");
+			currPlayer.addVictoryPoint();
+			
+		}
+		board.settlement = 0;
+		wantToBuildSettlement = false;
+	}
+	
+	public void playerBuildRoad() {
+			start = board.settlement;
+			board.turnOver = false;
+			boolean turnOver = false;
+			
+			while(!turnOver) {
+				turnOver = board.turnOver;
+			
+			}
+			playerFinishRoad();
+			
+			wantToBuildRoad = false;
+	}
+	
+	public void playerFinishRoad() {
+		
+		if (board.settlement < start) {
+			int tmp = board.settlement;
+			board.settlement = start;
+			start = tmp;
+		}
+		Edge edge = new Edge(start, board.settlement);
+		if (checkValidRoad(edge)) {
+			board.buildRoad(edge, currPlayer);
+			currPlayer.setBrick(currPlayer.getBrick() - 1);
+
+		}
+		start = 0;
+		board.settlement = 0;
+		
+	}
+	
+	public void playerBuildCity() {
+		
+		int settlement = board.settlement;
+		
+		if (checkValidCity(board.settlement)) {
+			board.buildCity(board.settlement, currPlayer);
+			currPlayer.setGrain(currPlayer.getGrain() - 2);
+			currPlayer.setOre(currPlayer.getOre() - 3);
+			System.out.println("built city");
+			currPlayer.addVictoryPoint();
+			
+		}
+		
+		board.settlement = 0;
+		wantToBuildCity = false;
 	}
 }

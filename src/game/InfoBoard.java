@@ -64,30 +64,64 @@ public class InfoBoard extends JPanel{
 	}
 	
 	public void buildInitialSettlement() {
-		String inputValue = JOptionPane.showInputDialog("Please input a corner value");
-		int settlement = Integer.parseInt(inputValue);
-		while (!engine.checkValidInitialSettlement(settlement)) {
-			
-			settlement = Integer.parseInt(JOptionPane.showInputDialog("Please input a corner value"));
-		}
+		JOptionPane.showMessageDialog(new JFrame(), "Please build a setttlement by clicking on a corner");
+		engine.board.turnOver = false;
+		boolean turnOver = false;
 		
+		while(!turnOver) {
+			
+			turnOver = engine.board.turnOver;
+		}
+		int settlement = engine.board.settlement;
 		engine.board.buildSettlement(settlement, engine.currPlayer);
 		engine.currPlayer.addVictoryPoint();
+		engine.board.settlement = 0;
+
 	}
 	
 	public void buildInitialRoad() {
-		String inputValue = JOptionPane.showInputDialog("Please input a starting edge value");
+		/*String inputValue = JOptionPane.showInputDialog("Please input a starting edge value");
 		int start = Integer.parseInt(inputValue);
 		String inputVal = JOptionPane.showInputDialog("Please input an ending edge value");
-		int end = Integer.parseInt(inputVal);
+		int end = Integer.parseInt(inputVal);*/
 		
-		while (!engine.checkValidRoad(new Edge(start, end))) {
+		/*while (!engine.checkValidRoad(new Edge(start, end))) {
 			start = Integer.parseInt(JOptionPane.showInputDialog("Please input a starting edge value"));
 			end = Integer.parseInt(JOptionPane.showInputDialog("Please input an ending edge value"));
 			
+		}*/
+		JOptionPane.showMessageDialog(new JFrame(), "Please select one end of your road by clicking on a corner");
+		
+		engine.board.turnOver = false;
+		boolean turnOver = false;
+		
+		while(!turnOver) {
+			turnOver = engine.board.turnOver;
 		}
-
+		
+		int start = engine.board.start;
+		
+		JOptionPane.showMessageDialog(new JFrame(), "Please select the other end of your road by clicking on a corner");
+		
+		engine.board.turnOver = false;
+		boolean turnOver2 = false;
+		
+		while(!turnOver2) {
+			turnOver2 = engine.board.turnOver;
+		}
+		
+		
+		int end = engine.board.end;
+		
+		if (end < start) {
+			int tmp = start;
+			start = end;
+			end = tmp;
+		}
+		
 		engine.board.buildRoad(new Edge(start, end), engine.currPlayer);
+		
+		engine.board.settlement = 0;
 	}
 	
 	public void moveRobber() {
@@ -163,24 +197,11 @@ public class InfoBoard extends JPanel{
         build.addActionListener(new ActionListener() { 
             public void actionPerformed(ActionEvent e)
             {
-    			if (engine.checkSettlementResources()) {
-            		String inputValue = JOptionPane.showInputDialog("Please input a corner value");
-    				int settlement = Integer.parseInt(inputValue);
-    				//System.out.println(engine.checkValidSettlement(settlement));
-    				if (engine.checkValidSettlement(settlement)) {
-    					engine.board.buildSettlement(settlement, engine.currPlayer);
-    					engine.currPlayer.setBrick(engine.currPlayer.getBrick() - 1);
-    					engine.currPlayer.setLumber(engine.currPlayer.getLumber() - 1);
-    					engine.currPlayer.setGrain(engine.currPlayer.getGrain() - 1);
-    					engine.currPlayer.setWool(engine.currPlayer.getWool() - 1);
-    					System.out.println("built settlement");
-    					engine.currPlayer.addVictoryPoint();
-    					
-    				}
-    			}
-    			
+            	
+    			if (engine.checkSettlementResources()) 
+            		engine.wantToBuildSettlement = true;
+    
     			else {
-					System.out.println("here");
 					JOptionPane.showMessageDialog(new JFrame(), "You do not have enough resources to build a settlement");
     			}
             }
@@ -190,24 +211,12 @@ public class InfoBoard extends JPanel{
         buildRoad.addActionListener(new ActionListener() { 
             public void actionPerformed(ActionEvent e)
             {
-        		
-        		if (engine.checkRoadResources()) {
-        			
-        			String inputValue = JOptionPane.showInputDialog("Please input a starting edge value");
-            		int start = Integer.parseInt(inputValue);
-            		String inputVal = JOptionPane.showInputDialog("Please input an ending edge value");
-            		int end = Integer.parseInt(inputVal);
-        			
-    				Edge edge = new Edge(start, end);
-    				if (engine.checkValidRoad(edge)) {
-    					engine.board.buildRoad(edge, engine.currPlayer);
-    					engine.currPlayer.setBrick(engine.currPlayer.getBrick() - 1);
-    					engine.currPlayer.setLumber(engine.currPlayer.getLumber() - 1);
-    				}
-    			}
+            	if (engine.checkRoadResources()) 
+        			engine.wantToBuildRoad = true;
+
         		
         		else {
-					JOptionPane.showMessageDialog(new JFrame(), "You do not have enough resources to build a settlement");
+					JOptionPane.showMessageDialog(new JFrame(), "You do not have enough resources to build a road");
     			}
             }
         });
@@ -238,20 +247,10 @@ public class InfoBoard extends JPanel{
  
             public void actionPerformed(ActionEvent e)
             {
-    			if (engine.checkCityResources()) {
-            		String inputValue = JOptionPane.showInputDialog("Please input a settlement to upgrade");
-    				int settlement = Integer.parseInt(inputValue);
-    				//System.out.println(engine.checkValidSettlement(settlement));
-    				if (engine.checkValidCity(settlement)) {
-    					engine.board.buildCity(settlement, engine.currPlayer);
-    					engine.currPlayer.setGrain(engine.currPlayer.getGrain() - 2);
-    					engine.currPlayer.setOre(engine.currPlayer.getOre() - 3);
-    					System.out.println("built city");
-    					engine.currPlayer.addVictoryPoint();
-    					
-    				}
-    			}
-    			
+    			if (engine.checkCityResources()) 
+
+    				engine.wantToBuildCity = true;
+
     			else {
 					JOptionPane.showMessageDialog(new JFrame(), "You do not have enough resources to build a city");
     			}
