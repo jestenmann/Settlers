@@ -234,8 +234,8 @@ public class GameEngine {
 		checkLongestRoad();
 		
 		//debug print statements
-		//System.out.println("Player # cities " + player.getCities().size());
-		//System.out.println("Player # settlements " + player.getSettlements().size());
+		System.out.println("Player # cities " + player.getCities().size());
+		System.out.println("Player # settlements " + player.getSettlements().size());
 	}
 	
 	
