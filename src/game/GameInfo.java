@@ -2,6 +2,7 @@ package game;
 
 import game.components.Corner;
 import game.components.Edge;
+import game.components.Tile;
 import game.players.Player;
 
 import java.util.ArrayList;
@@ -23,6 +24,12 @@ public class GameInfo {
 	
 	public ArrayList<Corner> getCorners() {
 		return board.corners;
+	}
+	
+	public ArrayList<Tile> getTilesAtCorner(int corner) {
+		Corner c = board.corners.get(corner);
+		
+		return c.getTiles();
 	}
 
 

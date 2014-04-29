@@ -6,6 +6,7 @@ import game.components.NumberToken;
 import game.components.Resource;
 import game.components.Tile;
 import game.players.AIPlayer;
+import game.players.HumanPlayer;
 import game.players.Player;
 
 import java.awt.Color;
@@ -40,22 +41,22 @@ public class GameEngine {
 		//use this to add AI strategy in the Player class 
 		p1 = new AIPlayer(Color.BLUE);
 		p2 = new AIPlayer(Color.ORANGE);
-		p3 = new AIPlayer(Color.WHITE);
-		p4 = new AIPlayer(Color.RED);
+		//p3 = new AIPlayer(Color.WHITE);
+		//p4 = new AIPlayer(Color.RED);
 		
 		
 		players.add(p1);
 		players.add(p2);
-		players.add(p3);
-		players.add(p4);
+		//players.add(p3);
+		//players.add(p4);
 
 		board = new GameBoard();
 		
 		gameInfo = new GameInfo(board);
 		p1.setInfo(gameInfo);
 		p2.setInfo(gameInfo);
-		p3.setInfo(gameInfo);
-		p4.setInfo(gameInfo);
+		//p3.setInfo(gameInfo);
+		//p4.setInfo(gameInfo);
 		
 		infoBoard = new InfoBoard(players);
 		
@@ -82,11 +83,11 @@ public class GameEngine {
 					settlement = currPlayer.buildInitialSettlement();
 				}
 				
-				/*try {
+				try {
 				    Thread.sleep(1000);
 				} catch(InterruptedException ex) {
 				    Thread.currentThread().interrupt();
-				}*/
+				}
 				
 				board.buildSettlement(settlement, currPlayer);
 				currPlayer.addVictoryPoint();
@@ -96,11 +97,11 @@ public class GameEngine {
 					edge = currPlayer.buildRoad();
 				}
 				
-				/*try {
+				try {
 			    Thread.sleep(1000);
 				} catch(InterruptedException ex) {
 				    Thread.currentThread().interrupt();
-				}*/
+				}
 				board.buildRoad(edge, currPlayer);
 
 				
@@ -110,6 +111,7 @@ public class GameEngine {
 	
 	private void turn(Player player) {
 		currPlayer = player;
+		board.setCurrPlayer(player);
 		
 		/**
 		 * building stuff
@@ -511,18 +513,14 @@ public class GameEngine {
 		
 		while (currPlayer.getPoints() < 10) {
 			
-			/*winner = 0;
-			for (int i = 0; i < players.size(); i++) {
-				if (players.get(i).getPoints() > maxPoints) {
-					maxPoints = players.get(i).getPoints();
-					winner = i;
-				}
-			}*/
-			
 			for (int j = 0; j < players.size(); j++) {
 				currPlayer = players.get(j);
 				rollDice();
-				turn(players.get(j));
+				if (players.get(j).type.equals("Human Player")) {
+					
+				}
+				else 
+					turn(players.get(j));
 				
 				//check victory points after 
 				if (players.get(j).getPoints() >= 10) {
@@ -532,7 +530,7 @@ public class GameEngine {
 				System.out.println(players.get(j) + " " + players.get(j).getPoints());
 				numTurns++;
 				try {
-				    Thread.sleep(0);
+				    Thread.sleep(1000);
 					} catch(InterruptedException ex) {
 					    Thread.currentThread().interrupt();
 					}

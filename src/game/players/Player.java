@@ -36,6 +36,18 @@ public class Player {
 	
 	int knights;
 	int roadLength;
+	
+	public String type;
+	
+	//booleans
+	public boolean wantsToTrade;
+	public boolean wantsToBuildRoad;
+	public boolean wantsToBuildSettlement;
+	public boolean wantsToBuildCity;
+	public boolean wantsToBuildDevelopmentCard;
+	public boolean wantsToPlayDevelopmentCard;
+	
+	
 
 	public Player(Color color) {
 		this.color = color;
@@ -52,6 +64,14 @@ public class Player {
 		roadLength = 0;
 		
 		developmentCards = new ArrayList<DevelopmentCard>();
+		
+		type = "Player";
+		wantsToTrade = true;
+		wantsToBuildRoad = true;
+		wantsToBuildSettlement = true;
+		wantsToBuildCity = true;
+		wantsToBuildDevelopmentCard = true;
+		wantsToPlayDevelopmentCard = true;
 		
 	}
 	
@@ -190,27 +210,27 @@ public class Player {
 	}
 	
 	public boolean wantsToBuildRoad() {
-		return true;
+		return wantsToBuildRoad;
 	}
 	
 	public boolean wantsToBuildSettlement() {
-		return true;
+		return wantsToBuildSettlement;
 	}
 	
 	public boolean wantsToBuildCity() {
-		return true;
+		return wantsToBuildCity;
 	}
 	
 	public boolean wantsToBuildDevelopmentCard() {
-		return true;
+		return wantsToBuildDevelopmentCard;
 	}
 	
 	public boolean wantsToPlayDevelopmentCard() {
-		return true;
+		return wantsToPlayDevelopmentCard;
 	}
 	
 	public boolean wantsToTrade() {
-		return true;
+		return wantsToTrade;
 	}
 	
 	/**

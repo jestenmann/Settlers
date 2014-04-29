@@ -11,7 +11,7 @@ public class HumanPlayer extends Player {
 
 	public HumanPlayer(Color color) {
 		super(color);
-		// TODO Auto-generated constructor stub
+		type = "HumanPlayer";
 	}
 	
 	//returns the number of the corner to place the settlement at 
@@ -24,7 +24,7 @@ public class HumanPlayer extends Player {
 	}
 	
 	public Edge buildRoad() {
-		return new Edge(-1, -1);
+		return new Edge(0, 0);
 	}
 	
 	

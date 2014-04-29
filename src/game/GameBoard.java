@@ -7,22 +7,16 @@ import game.components.Resource;
 import game.components.Tile;
 import game.players.Player;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.table.TableColumn;
 
 
 
@@ -35,7 +29,7 @@ public class GameBoard extends JPanel {
 	public ArrayList<Edge> edges;
 
 	//who is the current player in the array list 
-	private int currPlayerIndex;
+	private Player currPlayer;
 	
 	//the panel that contains the information 
 	private JPanel infoPanel;
@@ -50,8 +44,6 @@ public class GameBoard extends JPanel {
 	
 	public GameBoard() {
 
-
-		currPlayerIndex = 0;
 		
 		createTiles();
 		placeTiles();
@@ -71,6 +63,10 @@ public class GameBoard extends JPanel {
 	    addMouseListener(mouseHandler);  
 	    addMouseMotionListener(mouseHandler);
 
+	}
+	
+	public void setCurrPlayer(Player p) {
+		currPlayer = p;
 	}
 	
 	//takes in a corner to build a settlement and the player and builds the settlement 
@@ -446,7 +442,7 @@ public class GameBoard extends JPanel {
 	class Mouse extends MouseAdapter implements MouseMotionListener{
 		
 		public void mouseClicked(MouseEvent e){
-			/*Point p = e.getPoint();
+			Point p = e.getPoint();
 			System.out.println(corners.get(0).getPoint());
 			System.out.println(p);
 			
@@ -456,13 +452,13 @@ public class GameBoard extends JPanel {
 						
 						corners.get(i).setBounds((int)p.getX()-10, (int)p.getY()-10, 100, 100);
 						
-						corners.get(i).buildSettlement(players.get(currPlayerIndex));
+						corners.get(i).buildSettlement(currPlayer);
 
 						repaint();
 					}
 				}
 					
-			}*/
+			}
 			
 		}
 	
