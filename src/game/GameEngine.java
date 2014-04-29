@@ -84,7 +84,7 @@ public class GameEngine {
 				}
 				
 				try {
-				    Thread.sleep(1000);
+				    Thread.sleep(000);
 				} catch(InterruptedException ex) {
 				    Thread.currentThread().interrupt();
 				}
@@ -98,7 +98,7 @@ public class GameEngine {
 				}
 				
 				try {
-			    Thread.sleep(1000);
+			    Thread.sleep(000);
 				} catch(InterruptedException ex) {
 				    Thread.currentThread().interrupt();
 				}
@@ -530,7 +530,7 @@ public class GameEngine {
 				System.out.println(players.get(j) + " " + players.get(j).getPoints());
 				numTurns++;
 				try {
-				    Thread.sleep(000);
+				    Thread.sleep(100);
 					} catch(InterruptedException ex) {
 					    Thread.currentThread().interrupt();
 					}
