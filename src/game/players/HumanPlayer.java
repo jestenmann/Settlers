@@ -7,9 +7,9 @@ import game.components.Resource;
 import java.awt.Color;
 import java.util.Collections;
 
-public class AIPlayer extends Player {
+public class HumanPlayer extends Player {
 
-	public AIPlayer(Color color) {
+	public HumanPlayer(Color color) {
 		super(color);
 		// TODO Auto-generated constructor stub
 	}

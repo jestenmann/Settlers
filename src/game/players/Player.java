@@ -16,26 +16,26 @@ import java.util.Collections;
 public class Player {
 
 	//the color of the player 
-	private Color color;
+	Color color;
 	
 	//an array of how many resource cards the player has (in alphabetical order)
-	private int [] resources;
+	int [] resources;
 	
 	//the interface used to get information about the game board 
-	private GameInfo info;
+	GameInfo info;
 	
 	//boolean special cards 
-	private boolean largestArmy;
-	private boolean longestRoad;
+	boolean largestArmy;
+	boolean longestRoad;
 	
 	//the number of victory points the player has 
-	private int points;
+	int points;
 	
 	//array list of all the development cards the player has 
-	private ArrayList<DevelopmentCard> developmentCards;
+	ArrayList<DevelopmentCard> developmentCards;
 	
-	private int knights;
-	private int roadLength;
+	int knights;
+	int roadLength;
 
 	public Player(Color color) {
 		this.color = color;
