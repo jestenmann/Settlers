@@ -44,6 +44,18 @@ public class GameInfo {
 		
 		return playerCorners;
 	}
+	
+	public ArrayList<Corner> getPlayerSettlements(Player player) {
+		ArrayList<Corner> settlements = new ArrayList<Corner>();
+		for (int i = 0; i < board.corners.size(); i++) {
+			Corner c = board.corners.get(i);
+			if (c.getOwner() != null && c.getOwner().equals(player) && !c.hasCity()) {		
+					settlements.add(c);
+			}
+		}
+		
+		return settlements;
+	}
 
 
 
