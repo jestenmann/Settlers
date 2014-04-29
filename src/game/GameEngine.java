@@ -16,19 +16,19 @@ import java.util.Collections;
 
 public class GameEngine {
 
-	private GameBoard board;
+	GameBoard board;
 	private InfoBoard infoBoard;
 	private Player p1;
 	private Player p2;
 	private Player p3;
 	private Player p4;
-	private ArrayList<Player> players;
-	private Player currPlayer;
+	ArrayList<Player> players;
+	Player currPlayer;
 	
 	private int largestArmy;
 	private int longestRoad;
 	
-	private ArrayList<DevelopmentCard> developmentCards;
+	ArrayList<DevelopmentCard> developmentCards;
 	
 	public GameInfo gameInfo;
 	
@@ -39,7 +39,7 @@ public class GameEngine {
 		players = new ArrayList<Player>();
 
 		//use this to add AI strategy in the Player class 
-		p1 = new AIPlayer(Color.BLUE);
+		p1 = new HumanPlayer(Color.BLUE);
 		p2 = new AIPlayer(Color.ORANGE);
 		//p3 = new AIPlayer(Color.WHITE);
 		//p4 = new AIPlayer(Color.RED);
@@ -58,10 +58,11 @@ public class GameEngine {
 		//p3.setInfo(gameInfo);
 		//p4.setInfo(gameInfo);
 		
-		infoBoard = new InfoBoard(players);
-		
 		largestArmy= 0;
 		longestRoad = 0;
+		
+		
+		infoBoard = new InfoBoard(players, this);
 		
 	}
 	
@@ -77,33 +78,37 @@ public class GameEngine {
 		for (int j = 0; j < 2; j++) {
 			for (int i = 0; i < players.size(); i++) {
 				currPlayer = players.get(i);
-
-				while (!checkValidInitialSettlement(settlement)) {
-
-					settlement = currPlayer.buildInitialSettlement();
-				}
-				
-				try {
-				    Thread.sleep(000);
-				} catch(InterruptedException ex) {
-				    Thread.currentThread().interrupt();
-				}
-				
-				board.buildSettlement(settlement, currPlayer);
-				currPlayer.addVictoryPoint();
-				
-				edge = currPlayer.buildRoad();
-				while (!checkValidRoad(edge)) {
+				if (currPlayer.type.equals("AIPlayer")) {
+					while (!checkValidInitialSettlement(settlement)) {
+	
+						settlement = currPlayer.buildInitialSettlement();
+					}
+					
+					try {
+					    Thread.sleep(1000);
+					} catch(InterruptedException ex) {
+					    Thread.currentThread().interrupt();
+					}
+					
+					board.buildSettlement(settlement, currPlayer);
+					currPlayer.addVictoryPoint();
+					
 					edge = currPlayer.buildRoad();
+					while (!checkValidRoad(edge)) {
+						edge = currPlayer.buildRoad();
+					}
+					
+					try {
+				    Thread.sleep(1000);
+					} catch(InterruptedException ex) {
+					    Thread.currentThread().interrupt();
+					}
+					board.buildRoad(edge, currPlayer);
 				}
-				
-				try {
-			    Thread.sleep(000);
-				} catch(InterruptedException ex) {
-				    Thread.currentThread().interrupt();
+				else {
+					infoBoard.buildInitialSettlement();
+					infoBoard.buildInitialRoad();
 				}
-				board.buildRoad(edge, currPlayer);
-
 				
 			}
 		}
@@ -236,7 +241,7 @@ public class GameEngine {
 	
 	
 	
-	private void playDevelopmentCard(DevelopmentCard d) {
+	public void playDevelopmentCard(DevelopmentCard d) {
 		currPlayer.removeDevelopmentCard(d);
 		//do different stuff based on what development card it is
 		
@@ -262,6 +267,19 @@ public class GameEngine {
 		else if (d.equals(DevelopmentCard.YEAR_PLENTY)) {
 			//take two resource cards 
 			int resource = 0 + (int)(Math.random()*4); 
+			if (resource == 0)
+				currPlayer.setBrick(currPlayer.getBrick() + 1);
+			else if (resource == 1)
+				currPlayer.setGrain(currPlayer.getGrain() + 1);
+			else if (resource == 2)
+				currPlayer.setLumber(currPlayer.getLumber() + 1);
+			else if (resource == 3)
+				currPlayer.setOre(currPlayer.getOre() + 1);
+			else if (resource == 4)
+				currPlayer.setWool(currPlayer.getWool() + 1);
+			
+			//the second card 
+			resource = 0 + (int)(Math.random()*4); 
 			if (resource == 0)
 				currPlayer.setBrick(currPlayer.getBrick() + 1);
 			else if (resource == 1)
@@ -311,28 +329,28 @@ public class GameEngine {
 		
 	}
 	
-	private boolean checkSettlementResources() {
+	public boolean checkSettlementResources() {
 		if (currPlayer.getBrick() >= 1 && currPlayer.getLumber() >= 1 && currPlayer.getWool() >= 1 && currPlayer.getGrain() >= 1)
 			return true;
 		else
 			return false;
 	}
 	
-	private boolean checkRoadResources() {
+	public boolean checkRoadResources() {
 		if (currPlayer.getBrick() >= 1 && currPlayer.getLumber() >= 1)
 			return true;
 		else
 			return false;
 	}
 	
-	private boolean checkCityResources() {
+	public boolean checkCityResources() {
 		if (currPlayer.getGrain() >= 2 && currPlayer.getOre() >= 3)
 			return true;
 		else
 			return false;
 	}
 	
-	private boolean checkDevCardResources() {
+	public boolean checkDevCardResources() {
 		if (currPlayer.getWool() >= 1 && currPlayer.getGrain() >= 1 && currPlayer.getOre() >= 1)
 			return true;
 		else
@@ -341,7 +359,7 @@ public class GameEngine {
 	
 	
 	
-	private boolean checkValidCity(int space) {
+	public boolean checkValidCity(int space) {
 		if (space == -1)
 			return false;
 		Corner curr = board.corners.get(space);
@@ -350,7 +368,7 @@ public class GameEngine {
 		return curr.getOwner().equals(currPlayer);
 	}
 	
-	private boolean checkValidSettlement(int space) {
+	public boolean checkValidSettlement(int space) {
 		//if no space has been picked return false
 		if (space == -1)
 			return false;
@@ -390,7 +408,7 @@ public class GameEngine {
 
 	}
 	
-	private boolean checkValidInitialSettlement(int space) {
+	public boolean checkValidInitialSettlement(int space) {
 		//if no space has been picked return false
 		if (space == -1)
 			return false;
@@ -422,7 +440,7 @@ public class GameEngine {
 	}
 	
 	//takes in two corner numbers, and checks to see if a road can be placed between them
-	private boolean checkValidRoad(Edge edge) {
+	public boolean checkValidRoad(Edge edge) {
 		
 		//check to see if it is a valid edge 
 		Corner beginningCorner = board.corners.get(edge.getBeginningId());
@@ -510,14 +528,22 @@ public class GameEngine {
 		int maxPoints = 0;
 		int winner = 0;
 		int numTurns = 0;
-		
+	
 		while (currPlayer.getPoints() < 10) {
 			
 			for (int j = 0; j < players.size(); j++) {
 				currPlayer = players.get(j);
 				rollDice();
-				if (players.get(j).type.equals("Human Player")) {
+				
+				if (players.get(j).type.equals("HumanPlayer")) {
+					currPlayer = players.get(j);
+					//keep going until the player clicks end turn 
+					infoBoard.turnOver = false;
+					boolean turnOver = false;
 					
+					while(!turnOver) {
+						turnOver = infoBoard.turnOver;
+					}
 				}
 				else 
 					turn(players.get(j));
@@ -530,7 +556,7 @@ public class GameEngine {
 				System.out.println(players.get(j) + " " + players.get(j).getPoints());
 				numTurns++;
 				try {
-				    Thread.sleep(100);
+				    Thread.sleep(1000);
 					} catch(InterruptedException ex) {
 					    Thread.currentThread().interrupt();
 					}
@@ -563,7 +589,12 @@ public class GameEngine {
 		
 	}
 	
+	public void testPrint() {
+		System.out.println("testing");
+	}
+	
 	private void rollDice() {
+
 		
 		//roll the dice 
 		int dice1 = 1 + (int)(Math.random() * ((6 - 1) + 1));
@@ -580,7 +611,11 @@ public class GameEngine {
 		//robber
 		else {
 			//System.out.println("Sum: " + sum + ", move robber");
-			board.moveRobber(currPlayer.moveRobber());
+			if (currPlayer.type.equals("HumanPlayer")) {
+				infoBoard.moveRobber();
+			}
+			else
+				board.moveRobber(currPlayer.moveRobber());
 			halveResources();
 		}
 	}

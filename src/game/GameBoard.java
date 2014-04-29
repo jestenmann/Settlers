@@ -42,6 +42,8 @@ public class GameBoard extends JPanel {
 	private int xStart = 25;
 	private int yStart = 50;
 	
+	int settlement;
+	
 	public GameBoard() {
 
 		
@@ -62,6 +64,8 @@ public class GameBoard extends JPanel {
 		Mouse mouseHandler = new Mouse();
 	    addMouseListener(mouseHandler);  
 	    addMouseMotionListener(mouseHandler);
+	    
+	    settlement = 0;
 
 	}
 	
@@ -450,11 +454,14 @@ public class GameBoard extends JPanel {
 				if (Math.abs(corners.get(i).getPoint().getX() - p.getX()) < 20) {
 					if (Math.abs(corners.get(i).getPoint().getY() - p.getY()) < 20) {
 						
-						corners.get(i).setBounds((int)p.getX()-10, (int)p.getY()-10, 100, 100);
+						System.out.println(i);
+						settlement = i;
+						
+						/*corners.get(i).setBounds((int)p.getX()-10, (int)p.getY()-10, 100, 100);
 						
 						corners.get(i).buildSettlement(currPlayer);
 
-						repaint();
+						repaint();*/
 					}
 				}
 					
