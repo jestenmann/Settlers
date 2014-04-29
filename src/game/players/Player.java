@@ -3,10 +3,12 @@ package game.players;
 
 
 import game.GameInfo;
+import game.components.City;
 import game.components.Corner;
 import game.components.DevelopmentCard;
 import game.components.Edge;
 import game.components.Resource;
+import game.components.Settlement;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -47,6 +49,9 @@ public class Player {
 	public boolean wantsToBuildDevelopmentCard;
 	public boolean wantsToPlayDevelopmentCard;
 	
+	//cities and settlements
+	private ArrayList<City> cities;
+	private ArrayList<Settlement> settlements;
 	
 
 	public Player(Color color) {
@@ -72,7 +77,32 @@ public class Player {
 		wantsToBuildCity = true;
 		wantsToBuildDevelopmentCard = true;
 		wantsToPlayDevelopmentCard = true;
+		cities = new ArrayList<City>();
+		settlements = new ArrayList<Settlement>();
 		
+		
+	}
+	
+	public ArrayList<City> getCities() {
+		return cities;
+	}
+	
+	public ArrayList<Settlement> getSettlements() {
+		return settlements;
+	}
+
+	public boolean addCity(City c) {
+		
+		for(int i = 0;i < settlements.size();i++) {
+			if (settlements.get(i).getCorner().equals(c.getCorner())) {
+				settlements.remove(i);
+			}
+		}
+		return cities.add(c);
+	}
+	
+	public boolean addSettlement(Settlement s) {
+		return settlements.add(s);
 	}
 	
 	public GameInfo getInfo() {

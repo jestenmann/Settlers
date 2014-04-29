@@ -237,6 +237,10 @@ public class GameEngine {
 		//check for change in longest road and largest army
 		checkLargestArmy();
 		checkLongestRoad();
+		
+		//debug print statements
+		System.out.println("Player # cities " + player.getCities().size());
+		System.out.println("Player # settlements " + player.getSettlements().size());
 	}
 	
 	
