@@ -40,6 +40,7 @@ public class Corner extends JComponent {
 	public void buildSettlement(Player p) {
 		owner = p;
 		hasSettlement = true;
+		p.addSettlement(new Settlement(this));
 	}
 	
 	public boolean hasCity() {
@@ -57,6 +58,7 @@ public class Corner extends JComponent {
 	public void upgradeSettlement() {
 		hasSettlement = false;
 		hasCity = true;
+		owner.addCity(new City(this));
 	}
 	
 	public int getPosition() {
