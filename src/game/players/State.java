@@ -70,5 +70,6 @@ public class State {
 	public String ToString(){
 		return ""+canGrain + canLumber + canWool + canOre + canBrick + canSettlement+canRoad +canCity +canDC;
 	}
+	
 
 }

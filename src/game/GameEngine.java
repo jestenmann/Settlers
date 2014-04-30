@@ -15,6 +15,9 @@ import game.players.QFunction;
 import game.players.State;
 
 import java.awt.Color;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -654,6 +657,20 @@ public class GameEngine {
 			
 		}
 		//System.out.println(numTurns);
+		FileOutputStream fos;
+		ObjectOutputStream oos;
+		try {
+			fos = new FileOutputStream("t.tmp");
+			oos = new ObjectOutputStream(fos);
+			oos.writeObject(qf1.QGraph);
+			oos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		
 		System.out.println(players.get(winner));
 	}
 	

@@ -4,6 +4,7 @@ import game.GameInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public class QFunction {
 	public HashMap<StateActionPair,Double> QGraph;
@@ -14,8 +15,80 @@ public class QFunction {
 		QGraph = new HashMap<StateActionPair,Double>();
 		QGraph.put(new StateActionPair(new State(player,players),new Action(ActionType.Pass)), 0.0);
 	}
-	public Action ChooseBestAction(){
-		return new Action(ActionType.BuildCity);
+	public String ToString(){
+		Set<StateActionPair> keySet = QGraph.keySet();
+		String returnString = "";
+		for(StateActionPair sap:keySet){
+			returnString+=sap.ToString()+","+QGraph.get(sap)+"\n";
+		}
+		return returnString;
+	}
+	public void FromString(String s){
+		//
+	}
+	public Action ChooseBestAction(State s){
+		Set<StateActionPair> keySet = QGraph.keySet();
+		double BCVal = 0;
+		double BSVal = 0;
+		double BRVal = 0;
+		double BDCVal = 0;
+		double PVal = 0;
+		double TVal = 0;
+		double PDCVal = 0;
+		for(StateActionPair sap: keySet){
+			if(sap.equals(new StateActionPair(s,new Action(ActionType.BuildCity)))){
+				BCVal = QGraph.get(sap);
+			}
+			if(sap.equals(new StateActionPair(s,new Action(ActionType.BuildDC)))){
+				BDCVal = QGraph.get(sap);
+			}
+			if(sap.equals(new StateActionPair(s,new Action(ActionType.BuildRoad)))){
+				BRVal = QGraph.get(sap);
+			}
+			if(sap.equals(new StateActionPair(s,new Action(ActionType.BuildSettlement)))){
+				BSVal = QGraph.get(sap);
+			}
+			if(sap.equals(new StateActionPair(s,new Action(ActionType.Pass)))){
+				PVal = QGraph.get(sap);
+			}
+			if(sap.equals(new StateActionPair(s,new Action(ActionType.Trade)))){
+				TVal = QGraph.get(sap);
+			}
+			if(sap.equals(new StateActionPair(s,new Action(ActionType.PlayDC)))){
+				PDCVal = QGraph.get(sap);
+			}
+		}
+		double QMAX = 0;
+		Action bestAction = new Action(ActionType.BuildCity);
+		if(BCVal>QMAX){
+			QMAX = BCVal;
+			bestAction = new Action(ActionType.BuildCity);
+		}
+		if(BSVal>QMAX){
+			QMAX = BSVal;
+			bestAction = new Action(ActionType.BuildSettlement);
+		}
+		if(BRVal>QMAX){
+			QMAX = BRVal;
+			bestAction = new Action(ActionType.BuildRoad);
+		}
+		if(BDCVal>QMAX){
+			QMAX = BDCVal;
+			bestAction = new Action(ActionType.BuildDC);
+		}
+		if(PVal>QMAX){
+			QMAX = PVal;
+			bestAction = new Action(ActionType.Pass);
+		}
+		if(TVal>QMAX){
+			QMAX = TVal;
+			bestAction = new Action(ActionType.Trade);
+		}
+		if(PDCVal>QMAX){
+			QMAX = PDCVal;
+			bestAction = new Action(ActionType.PlayDC);
+		}
+		return bestAction;
 	
 	}
 	public void UpdateQ(LearningTuple LT){
@@ -71,6 +144,7 @@ public class QFunction {
 		return maxQ;
 	
 	}
+	
 	
 
 }
