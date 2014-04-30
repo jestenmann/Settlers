@@ -73,12 +73,12 @@ public class Player {
 		developmentCards = new ArrayList<DevelopmentCard>();
 		
 		type = "Player";
-		wantsToTrade = true;
-		wantsToBuildRoad = true;
-		wantsToBuildSettlement = true;
-		wantsToBuildCity = true;
-		wantsToBuildDevelopmentCard = true;
-		wantsToPlayDevelopmentCard = true;
+		this.wantsToTrade = false;
+		this.wantsToBuildRoad = false;
+		this.wantsToBuildSettlement = false;
+		this.wantsToBuildCity = false;
+		this.wantsToBuildDevelopmentCard = false;
+		this.wantsToPlayDevelopmentCard = false;
 		cities = new ArrayList<City>();
 		settlements = new ArrayList<Settlement>();
 		
@@ -292,29 +292,30 @@ public class Player {
 	}
 	public void setAction(Action a){
 		this.a = a;
-		wantsToTrade = false;
-		wantsToBuildRoad = false;
-		wantsToBuildSettlement =false;
-		wantsToBuildCity = false;
-		wantsToBuildDevelopmentCard = false;
-		wantsToPlayDevelopmentCard = false;
-		if(a.equals(ActionType.BuildCity)){
-			wantsToBuildCity = true;
+		this.wantsToTrade = false;
+		this.wantsToBuildRoad = false;
+		this.wantsToBuildSettlement =false;
+		this.wantsToBuildCity = false;
+		this.wantsToBuildDevelopmentCard = false;
+		this.wantsToPlayDevelopmentCard = false;
+		System.out.println(a.action.toString());
+		if(a.action.equals(ActionType.BuildCity)){
+			this.wantsToBuildCity = true;
 		}
-		if(a.equals(ActionType.BuildDC)){
-			wantsToBuildDevelopmentCard = true;
+		if(a.action.equals(ActionType.BuildDC)){
+			this.wantsToBuildDevelopmentCard = true;
 		}
-		if(a.equals(ActionType.BuildSettlement)){
-			wantsToBuildSettlement = true;
+		if(a.action.equals(ActionType.BuildSettlement)){
+			this.wantsToBuildSettlement = true;
 		}
-		if(a.equals(ActionType.BuildRoad)){
-			wantsToBuildRoad = true;
+		if(a.action.equals(ActionType.BuildRoad)){
+			this.wantsToBuildRoad = true;
 		}
-		if(a.equals(ActionType.Trade)){
-			wantsToTrade = true;
+		if(a.action.equals(ActionType.Trade)){
+			this.wantsToTrade = true;
 		}
-		if(a.equals(ActionType.PlayDC)){
-			wantsToPlayDevelopmentCard = true;
+		if(a.action.equals(ActionType.PlayDC)){
+			this.wantsToPlayDevelopmentCard = true;
 		}
 	}
 	//returns an edge where the road should be placed (from lower index to higher index)

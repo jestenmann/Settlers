@@ -69,7 +69,12 @@ public class InfoBoard extends JPanel{
 		boolean turnOver = false;
 		
 		while(!turnOver) {
-			
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			turnOver = engine.board.turnOver;
 		}
 		int settlement = engine.board.settlement;
@@ -96,6 +101,12 @@ public class InfoBoard extends JPanel{
 		boolean turnOver = false;
 		
 		while(!turnOver) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			turnOver = engine.board.turnOver;
 		}
 		
@@ -107,6 +118,12 @@ public class InfoBoard extends JPanel{
 		boolean turnOver2 = false;
 		
 		while(!turnOver2) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			turnOver2 = engine.board.turnOver;
 		}
 		

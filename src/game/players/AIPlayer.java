@@ -18,45 +18,14 @@ public class AIPlayer extends Player {
 	public AIPlayer(Color color) {
 		super(color);
 		this.type = "AIPlayer";
-		this.wantsToTrade = false;
-		this.wantsToBuildRoad = false;
-		this.wantsToBuildSettlement =false;
-		this.wantsToBuildCity = false;
-		this.wantsToBuildDevelopmentCard = false;
-		this.wantsToPlayDevelopmentCard = false;
+		
 		
 		settlements = 0;
 		
 	}
 	
 	
-	public void setAction(Action a){
-		this.a = a;
-		wantsToTrade = false;
-		wantsToBuildRoad = false;
-		wantsToBuildSettlement =false;
-		wantsToBuildCity = false;
-		wantsToBuildDevelopmentCard = false;
-		wantsToPlayDevelopmentCard = false;
-		if(a.equals(ActionType.BuildCity)){
-			wantsToBuildCity = true;
-		}
-		if(a.equals(ActionType.BuildDC)){
-			wantsToBuildDevelopmentCard = true;
-		}
-		if(a.equals(ActionType.BuildSettlement)){
-			wantsToBuildSettlement = true;
-		}
-		if(a.equals(ActionType.BuildRoad)){
-			wantsToBuildRoad = true;
-		}
-		if(a.equals(ActionType.Trade)){
-			wantsToTrade = true;
-		}
-		if(a.equals(ActionType.PlayDC)){
-			wantsToPlayDevelopmentCard = true;
-		}
-	}
+	
 	
 	//returns the number of the corner to place the settlement at 
 	public int buildInitialSettlement() {

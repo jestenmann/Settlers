@@ -14,6 +14,10 @@ public class QFunction {
 		QGraph = new HashMap<StateActionPair,Double>();
 		QGraph.put(new StateActionPair(new State(player,players),new Action(ActionType.Pass)), 0.0);
 	}
+	public Action ChooseBestAction(){
+		return new Action(ActionType.BuildCity);
+	
+	}
 	public void UpdateQ(LearningTuple LT){
 		if(!QGraph.containsKey(LT.Sap1)){
 			QGraph.put(LT.Sap1,0.0);

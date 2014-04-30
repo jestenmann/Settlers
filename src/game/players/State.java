@@ -23,7 +23,7 @@ public class State {
 		
 		this.player = player;
 		
-		//TODO add mladens settlements code to get resources
+		
 		ArrayList<Building> buildings = player.getBuildings();
 		
 		VP = new ArrayList<Integer>();

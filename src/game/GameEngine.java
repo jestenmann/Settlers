@@ -57,7 +57,7 @@ public class GameEngine {
 		players = new ArrayList<Player>();
 
 		//use this to add AI strategy in the Player class 
-		p1 = new HumanPlayer(Color.BLUE);
+		p1 = new AIPlayer(Color.BLUE);
 		p2 = new AIPlayer(Color.ORANGE);
 		
 		
@@ -108,11 +108,11 @@ public class GameEngine {
 						settlement = currPlayer.buildInitialSettlement();
 					}
 					
-					try {
-					    Thread.sleep(1000);
-					} catch(InterruptedException ex) {
-					    Thread.currentThread().interrupt();
-					}
+//					try {
+//					    Thread.sleep(1000);
+//					} catch(InterruptedException ex) {
+//					    Thread.currentThread().interrupt();
+//					}
 					
 					board.buildSettlement(settlement, currPlayer);
 					currPlayer.addVictoryPoint();
@@ -122,11 +122,11 @@ public class GameEngine {
 						edge = currPlayer.buildRoad();
 					}
 					
-					try {
-				    Thread.sleep(1000);
-					} catch(InterruptedException ex) {
-					    Thread.currentThread().interrupt();
-					}
+//					try {
+//				    Thread.sleep(1000);
+//					} catch(InterruptedException ex) {
+//					    Thread.currentThread().interrupt();
+//					}
 					board.buildRoad(edge, currPlayer);
 				}
 				else {
@@ -136,8 +136,12 @@ public class GameEngine {
 				
 			}
 		}
-		qf1 = new QFunction((AIPlayer)p1,players);
-		qf2 = new QFunction((AIPlayer)p2,players);
+		if(p1.type.equals("AIPlayer")){
+			qf1 = new QFunction((AIPlayer)p1,players);
+		}
+		if(p2.type.equals("AIPlayer")){
+			qf2 = new QFunction((AIPlayer)p2,players);
+		}
 	}
 	
 	private void turn(Player player) {
@@ -168,6 +172,12 @@ public class GameEngine {
 				player.setAction(new Action(ActionType.Pass));
 			}
 			s = new State((AIPlayer)player,players);
+//			System.out.println("Action:"+player.a.action.toString());
+//			System.out.println("Brick:"+player.getBrick());
+//			System.out.println("Wool:"+player.getWool());
+//			System.out.println("Grain:"+player.getGrain());
+//			System.out.println("Lumber:"+player.getLumber());
+//			System.out.println("Ore:"+player.getOre());
 		}
 		/**
 		 * building stuff
@@ -175,6 +185,7 @@ public class GameEngine {
 		
 		
 		//settlement
+		//System.out.println(player.wantsToBuildSettlement());
 		if (player.wantsToBuildSettlement()) { 
 			if (checkSettlementResources()) {
 				int settlement = player.buildSettlement();
@@ -633,11 +644,11 @@ public class GameEngine {
 				}
 				System.out.println(players.get(j) + " " + players.get(j).getPoints());
 				numTurns++;
-				try {
-				    Thread.sleep(1000);
-					} catch(InterruptedException ex) {
-					    Thread.currentThread().interrupt();
-					}
+//				try {
+//				    Thread.sleep(1000);
+//					} catch(InterruptedException ex) {
+//					    Thread.currentThread().interrupt();
+//					}
 			}
 			
 			
