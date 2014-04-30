@@ -15,6 +15,7 @@ import game.players.QFunction;
 import game.players.State;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class GameEngine {
 	
 	public GameInfo gameInfo;
 	public State s;
-	boolean isTraining = false;
+	boolean isTraining = true;
 	boolean wantToBuildSettlement;
 	boolean wantToBuildCity;
 	boolean wantToBuildRoad;
@@ -142,25 +143,16 @@ public class GameEngine {
 		}
 		if(p1.type.equals("AIPlayer")){
 			qf1 = new QFunction((AIPlayer)p1,players);
-			if(!isTraining) {
 				try {
+					System.out.println("READING FILE");
 					qf1.readFile("p1");
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-		}
 		if(p2.type.equals("AIPlayer")){
 			qf2 = new QFunction((AIPlayer)p2,players);
-			if(!isTraining) {
-				try {
-					qf2.readFile("p2");
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 	
@@ -678,8 +670,12 @@ public class GameEngine {
 		}
 
 		if(isTraining) {
+	        File fileTemp = new File("p1");
+	          if (fileTemp.exists()){
+	             fileTemp.delete();
+	          } 
 			qf1.write_file("p1");
-			qf2.write_file("p2");
+//			qf2.write_file("p2");
 		}
 		System.out.println(players.get(winner));
 	}
