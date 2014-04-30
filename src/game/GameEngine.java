@@ -14,6 +14,7 @@ import game.players.Player;
 import game.players.QFunction;
 import game.players.State;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -90,6 +91,7 @@ public class GameEngine {
 		largestArmy= 0;
 		longestRoad = 0;
 		
+		currPlayer = p1;
 		
 		infoBoard = new InfoBoard(players, this);
 		
@@ -629,6 +631,7 @@ public class GameEngine {
 				
 				if (players.get(j).type.equals("HumanPlayer")) {
 					currPlayer = players.get(j);
+					infoBoard.add(infoBoard.infoPanel(), BorderLayout.SOUTH);
 					//keep going until the player clicks end turn 
 					infoBoard.turnOver = false;
 					boolean turnOver = false;

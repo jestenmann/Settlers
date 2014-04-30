@@ -36,7 +36,7 @@ public class Player {
 	int points;
 	
 	//array list of all the development cards the player has 
-	ArrayList<DevelopmentCard> developmentCards;
+	public ArrayList<DevelopmentCard> developmentCards;
 	
 	int knights;
 	int roadLength;

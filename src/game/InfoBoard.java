@@ -39,12 +39,16 @@ public class InfoBoard extends JPanel{
 		setLayout(new BorderLayout());
 		setBackground(Color.PINK);
 		add(buildButtons(), BorderLayout.CENTER);
-		//resourceTable = buildTable();
-		//add(resourceTable, BorderLayout.SOUTH);
+		
+		//add
 		
 		this.engine = engine;
 		
 		turnOver = true;
+		
+		add(infoPanel(), BorderLayout.SOUTH);
+		
+		this.setPreferredSize(new Dimension(475, 400));
 
 	}
 	
@@ -69,18 +73,15 @@ public class InfoBoard extends JPanel{
 		boolean turnOver = false;
 		
 		while(!turnOver) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
 			turnOver = engine.board.turnOver;
 		}
 		int settlement = engine.board.settlement;
 		engine.board.buildSettlement(settlement, engine.currPlayer);
 		engine.currPlayer.addVictoryPoint();
 		engine.board.settlement = 0;
+		
+		add(infoPanel(), BorderLayout.SOUTH);
 
 	}
 	
@@ -101,12 +102,6 @@ public class InfoBoard extends JPanel{
 		boolean turnOver = false;
 		
 		while(!turnOver) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			turnOver = engine.board.turnOver;
 		}
 		
@@ -118,12 +113,6 @@ public class InfoBoard extends JPanel{
 		boolean turnOver2 = false;
 		
 		while(!turnOver2) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			turnOver2 = engine.board.turnOver;
 		}
 		
@@ -194,7 +183,6 @@ public class InfoBoard extends JPanel{
 	
 	private JPanel buildButtons() {
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.setSize(100, 400);
 		
 		d1 = new JTextArea("Dice 1 value:  ");
 		d2 = new JTextArea("Dice 2 value:  ");
@@ -256,6 +244,8 @@ public class InfoBoard extends JPanel{
 					
 					JOptionPane.showMessageDialog(new JFrame(), "You do not have enough resources to get a development card");
     			}
+				
+				
         	}
         });
         
@@ -450,12 +440,46 @@ public class InfoBoard extends JPanel{
 	    buttonPanel.add(trade);
 	    buttonPanel.add(turn);
 	   
-	    
-	    buttonPanel.add(d1);
-	    buttonPanel.add(d2);
-	    buttonPanel.add(total);
-	    buttonPanel.setPreferredSize(new Dimension(200, 400));
+	    JPanel dicePanel = new JPanel();
+	    dicePanel.add(d1);
+	    dicePanel.add(d2);
+	    dicePanel.add(total);
+	    dicePanel.setBackground(Color.WHITE);
+	    buttonPanel.add(dicePanel);
+	   
+	    buttonPanel.setPreferredSize(new Dimension(450, 400));
 	    return buttonPanel;
+	}
+	
+	public JPanel infoPanel() {
+
+		JPanel infoPanel = new JPanel();
+		infoPanel.setBackground(Color.WHITE);
+		JTextArea lumber = new JTextArea("Lumber: " + engine.currPlayer.getLumber());
+		JTextArea brick = new JTextArea("Brick: " + engine.currPlayer.getBrick());
+		JTextArea grain = new JTextArea("Grain: " + engine.currPlayer.getGrain());
+		JTextArea ore = new JTextArea("Ore: " + engine.currPlayer.getOre());
+		JTextArea wool = new JTextArea("Wool: " + engine.currPlayer.getWool());
+		
+		JPanel subPanel = new JPanel();
+		
+		subPanel.add(lumber);
+		subPanel.add(brick);
+		subPanel.add(grain);
+		subPanel.add(ore);
+		subPanel.add(wool);
+		subPanel.setBackground(Color.WHITE);
+		JPanel devCards = new JPanel();
+		String devString = "";
+		
+		for (int i = 0; i < engine.currPlayer.developmentCards.size(); i++) {
+			devString = devString + ", " + engine.currPlayer.developmentCards.get(i);
+		}
+		JTextArea dev = new JTextArea("Development cards: " + devString);
+		infoPanel.add(subPanel, BorderLayout.NORTH);
+		infoPanel.add(dev, BorderLayout.SOUTH);
+		
+		return infoPanel;
 	}
 	
 	
