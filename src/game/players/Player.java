@@ -3,6 +3,7 @@ package game.players;
 
 
 import game.GameInfo;
+import game.components.Building;
 import game.components.City;
 import game.components.Corner;
 import game.components.DevelopmentCard;
@@ -22,7 +23,8 @@ public class Player {
 	
 	//an array of how many resource cards the player has (in alphabetical order)
 	int [] resources;
-	
+	public Action a;
+	public State s;
 	//the interface used to get information about the game board 
 	GameInfo info;
 	
@@ -83,12 +85,19 @@ public class Player {
 		
 	}
 	
+	
 	public ArrayList<City> getCities() {
 		return cities;
 	}
 	
 	public ArrayList<Settlement> getSettlements() {
 		return settlements;
+	}
+	public ArrayList<Building> getBuildings(){
+		ArrayList<Building> buildings = new ArrayList<Building>();
+		buildings.addAll(settlements);
+		buildings.addAll(cities);
+		return buildings;
 	}
 
 	public boolean addCity(City c) {
@@ -278,7 +287,36 @@ public class Player {
 		int	space = 0 + (int)(Math.random()*53); 
 		return space;
 	}
-	
+	public Action getAction(){
+		return this.a;
+	}
+	public void setAction(Action a){
+		this.a = a;
+		wantsToTrade = false;
+		wantsToBuildRoad = false;
+		wantsToBuildSettlement =false;
+		wantsToBuildCity = false;
+		wantsToBuildDevelopmentCard = false;
+		wantsToPlayDevelopmentCard = false;
+		if(a.equals(ActionType.BuildCity)){
+			wantsToBuildCity = true;
+		}
+		if(a.equals(ActionType.BuildDC)){
+			wantsToBuildDevelopmentCard = true;
+		}
+		if(a.equals(ActionType.BuildSettlement)){
+			wantsToBuildSettlement = true;
+		}
+		if(a.equals(ActionType.BuildRoad)){
+			wantsToBuildRoad = true;
+		}
+		if(a.equals(ActionType.Trade)){
+			wantsToTrade = true;
+		}
+		if(a.equals(ActionType.PlayDC)){
+			wantsToPlayDevelopmentCard = true;
+		}
+	}
 	//returns an edge where the road should be placed (from lower index to higher index)
 	public Edge buildRoad() {
 		//int start = 0 + (int)(Math.random()*53);

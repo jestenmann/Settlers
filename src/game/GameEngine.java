@@ -6,12 +6,18 @@ import game.components.NumberToken;
 import game.components.Resource;
 import game.components.Tile;
 import game.players.AIPlayer;
+import game.players.Action;
+import game.players.ActionType;
 import game.players.HumanPlayer;
+import game.players.LearningTuple;
 import game.players.Player;
+import game.players.QFunction;
+import game.players.State;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 
 public class GameEngine {
@@ -22,6 +28,8 @@ public class GameEngine {
 	private Player p2;
 	private Player p3;
 	private Player p4;
+	public QFunction qf1;
+	public QFunction qf2;
 	private ArrayList<Player> players;
 	private Player currPlayer;
 	
@@ -31,6 +39,8 @@ public class GameEngine {
 	private ArrayList<DevelopmentCard> developmentCards;
 	
 	public GameInfo gameInfo;
+	public State s;
+	boolean isTraining = true;
 	
 	public GameEngine () {
 		
@@ -41,18 +51,24 @@ public class GameEngine {
 		//use this to add AI strategy in the Player class 
 		p1 = new AIPlayer(Color.BLUE);
 		p2 = new AIPlayer(Color.ORANGE);
+		
+		
 		//p3 = new AIPlayer(Color.WHITE);
 		//p4 = new AIPlayer(Color.RED);
 		
 		
 		players.add(p1);
 		players.add(p2);
+		
 		//players.add(p3);
 		//players.add(p4);
 
 		board = new GameBoard();
 		
 		gameInfo = new GameInfo(board);
+		
+		
+		
 		p1.setInfo(gameInfo);
 		p2.setInfo(gameInfo);
 		//p3.setInfo(gameInfo);
@@ -107,15 +123,43 @@ public class GameEngine {
 				
 			}
 		}
+		qf1 = new QFunction((AIPlayer)p1,players);
+		qf2 = new QFunction((AIPlayer)p2,players);
 	}
 	
 	private void turn(Player player) {
 		currPlayer = player;
 		board.setCurrPlayer(player);
-		
+		if(isTraining){
+			int actionNum = (int)(Math.random()*7);
+			
+			if(actionNum==0){
+				player.setAction(new Action(ActionType.BuildCity));
+			}
+			if(actionNum==1){
+				player.setAction(new Action(ActionType.BuildDC));
+			}
+			if(actionNum==2){
+				player.setAction(new Action(ActionType.BuildRoad));
+			}
+			if(actionNum==3){
+				player.setAction(new Action(ActionType.BuildSettlement));
+			}
+			if(actionNum==4){
+				player.setAction(new Action(ActionType.PlayDC));
+			}
+			if(actionNum==5){
+				player.setAction(new Action(ActionType.Trade));
+			}
+			if(actionNum==6){
+				player.setAction(new Action(ActionType.Pass));
+			}
+			s = new State((AIPlayer)player,players);
+		}
 		/**
 		 * building stuff
 		 */
+		
 		
 		//settlement
 		if (player.wantsToBuildSettlement()) { 
@@ -233,6 +277,16 @@ public class GameEngine {
 		checkLargestArmy();
 		checkLongestRoad();
 		
+		if(currPlayer.equals(p1)){
+			State s1 = new State((AIPlayer)p1,players);
+			qf1.UpdateQ(new LearningTuple(s,s1,p1.getAction(),s1.Reward));
+			s = s1;
+		}
+		if(currPlayer.equals(p2)){
+			State s1 = new State((AIPlayer)p2,players);
+			qf2.UpdateQ(new LearningTuple(s,s1,p2.getAction(),s1.Reward));
+			s = s1;
+		}
 		//debug print statements
 		System.out.println("Player # cities " + player.getCities().size());
 		System.out.println("Player # settlements " + player.getSettlements().size());
