@@ -24,7 +24,22 @@ public class QFunction {
 		return returnString;
 	}
 	public void FromString(String s){
-		//
+		String[] split = s.split(",");
+		QGraph.put(SapFromString(split[0]), Double.parseDouble(split[1]));
+		
+	}
+	public StateActionPair SapFromString(String s){
+		String[] stateAction = s.split(":");
+		return new StateActionPair(StateFromString(stateAction[0]),ActionFromString(stateAction[1]));
+	}
+	public State StateFromString(String s){
+		String[] split = s.split(";");
+		State state = new State(Boolean.parseBoolean(split[0]),Boolean.parseBoolean(split[1]),Boolean.parseBoolean(split[2]),Boolean.parseBoolean(split[3]),Boolean.parseBoolean(split[4]),Boolean.parseBoolean(split[5]),Boolean.parseBoolean(split[6]),Boolean.parseBoolean(split[7]),Boolean.parseBoolean(split[8]));
+		return state;
+	}
+	public Action ActionFromString(String s){
+		Action action = new Action(ActionType.valueOf(s));
+		return action;
 	}
 	public Action ChooseBestAction(State s){
 		Set<StateActionPair> keySet = QGraph.keySet();

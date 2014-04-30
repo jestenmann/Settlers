@@ -18,6 +18,17 @@ public class State {
 	public boolean canGrain = false,canLumber = false,canWool = false,canOre = false,canBrick = false;
 	public boolean canSettlement = false,canRoad = false,canCity = false,canDC = false;
 	
+	public State(boolean cG,boolean cL,boolean cW,boolean cO,boolean cB,boolean cS,boolean cR,boolean cC,boolean cD){
+		
+		this.canGrain = cG;
+		this.canLumber = cL;
+		this.canWool = cW;
+		this.canOre = cO;
+		this.canBrick = cB;
+		this.canSettlement = cS;
+		this.canRoad = cR;
+		this.canCity = cC;
+	}
 	
 	public State(AIPlayer player,ArrayList<Player> players){
 		
@@ -68,8 +79,9 @@ public class State {
 		}
 	}
 	public String ToString(){
-		return ""+canGrain + canLumber + canWool + canOre + canBrick + canSettlement+canRoad +canCity +canDC;
+		return ""+canGrain+";" + canLumber+";" + canWool+";" + canOre+";" + canBrick+";" + canSettlement+";"+canRoad+";" +canCity+";" +canDC;
 	}
+	
 	
 
 }
