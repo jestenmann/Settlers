@@ -9,6 +9,7 @@ import game.players.AIPlayer;
 import game.players.HumanPlayer;
 import game.players.Player;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,6 +59,7 @@ public class GameEngine {
 		//players.add(p4);
 
 		board = new GameBoard();
+		currPlayer = p1;
 		
 		gameInfo = new GameInfo(board);
 		p1.setInfo(gameInfo);
@@ -548,6 +550,7 @@ public class GameEngine {
 				
 				if (players.get(j).type.equals("HumanPlayer")) {
 					currPlayer = players.get(j);
+					infoBoard.add(infoBoard.infoPanel(), BorderLayout.SOUTH);
 					//keep going until the player clicks end turn 
 					infoBoard.turnOver = false;
 					boolean turnOver = false;
@@ -567,6 +570,8 @@ public class GameEngine {
 							playerBuildCity();
 						}
 					}
+					
+					
 				}
 				else 
 					turn(players.get(j));
@@ -579,7 +584,7 @@ public class GameEngine {
 				System.out.println(players.get(j) + " " + players.get(j).getPoints());
 				numTurns++;
 				try {
-				    Thread.sleep(1000);
+				    Thread.sleep(100);
 					} catch(InterruptedException ex) {
 					    Thread.currentThread().interrupt();
 					}
