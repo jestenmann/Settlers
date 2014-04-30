@@ -15,6 +15,7 @@ import game.players.QFunction;
 import game.players.State;
 
 import java.awt.Color;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -47,7 +48,7 @@ public class GameEngine {
 	
 	public GameInfo gameInfo;
 	public State s;
-	boolean isTraining = true;
+	boolean isTraining = false;
 	boolean wantToBuildSettlement;
 	boolean wantToBuildCity;
 	boolean wantToBuildRoad;
@@ -141,50 +142,69 @@ public class GameEngine {
 		}
 		if(p1.type.equals("AIPlayer")){
 			qf1 = new QFunction((AIPlayer)p1,players);
+			if(!isTraining) {
+				try {
+					qf1.readFile("p1");
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		if(p2.type.equals("AIPlayer")){
 			qf2 = new QFunction((AIPlayer)p2,players);
+			if(!isTraining) {
+				try {
+					qf2.readFile("p2");
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	
 	private void turn(Player player) {
 		currPlayer = player;
 		board.setCurrPlayer(player);
-		if(isTraining){
-			int actionNum = (int)(Math.random()*7);
-			
-			if(actionNum==0){
-				player.setAction(new Action(ActionType.BuildCity));
+		if(player.type=="AIPlayer") {
+			if(isTraining){
+				int actionNum = (int)(Math.random()*7);
+				
+				if(actionNum==0){
+					player.setAction(new Action(ActionType.BuildCity));
+				}
+				if(actionNum==1){
+					player.setAction(new Action(ActionType.BuildDC));
+				}
+				if(actionNum==2){
+					player.setAction(new Action(ActionType.BuildRoad));
+				}
+				if(actionNum==3){
+					player.setAction(new Action(ActionType.BuildSettlement));
+				}
+				if(actionNum==4){
+					player.setAction(new Action(ActionType.PlayDC));
+				}
+				if(actionNum==5){
+					player.setAction(new Action(ActionType.Trade));
+				}
+				if(actionNum==6){
+					player.setAction(new Action(ActionType.Pass));
+				}
+				s = new State((AIPlayer)player,players);
+			} else {
+				s = new State((AIPlayer)player,players);
+				if(player.equals(p1)) {
+					player.setAction(qf1.ChooseBestAction(s));
+					
+				}else if(player.equals(p2)){
+					player.setAction(qf2.ChooseBestAction(s));
+				}
+				
 			}
-			if(actionNum==1){
-				player.setAction(new Action(ActionType.BuildDC));
-			}
-			if(actionNum==2){
-				player.setAction(new Action(ActionType.BuildRoad));
-			}
-			if(actionNum==3){
-				player.setAction(new Action(ActionType.BuildSettlement));
-			}
-			if(actionNum==4){
-				player.setAction(new Action(ActionType.PlayDC));
-			}
-			if(actionNum==5){
-				player.setAction(new Action(ActionType.Trade));
-			}
-			if(actionNum==6){
-				player.setAction(new Action(ActionType.Pass));
-			}
-			s = new State((AIPlayer)player,players);
-//			System.out.println("Action:"+player.a.action.toString());
-//			System.out.println("Brick:"+player.getBrick());
-//			System.out.println("Wool:"+player.getWool());
-//			System.out.println("Grain:"+player.getGrain());
-//			System.out.println("Lumber:"+player.getLumber());
-//			System.out.println("Ore:"+player.getOre());
 		}
-		/**
-		 * building stuff
-		 */
+				
 		
 		
 		//settlement
@@ -656,21 +676,11 @@ public class GameEngine {
 			
 			
 		}
-		//System.out.println(numTurns);
-		FileOutputStream fos;
-		ObjectOutputStream oos;
-		try {
-			fos = new FileOutputStream("t.tmp");
-			oos = new ObjectOutputStream(fos);
-			oos.writeObject(qf1.QGraph);
-			oos.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
-		
-		
+		if(isTraining) {
+			qf1.write_file("p1");
+			qf2.write_file("p2");
+		}
 		System.out.println(players.get(winner));
 	}
 	

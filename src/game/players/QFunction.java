@@ -2,8 +2,16 @@ package game.players;
 
 import game.GameInfo;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 public class QFunction {
@@ -15,6 +23,31 @@ public class QFunction {
 		QGraph = new HashMap<StateActionPair,Double>();
 		QGraph.put(new StateActionPair(new State(player,players),new Action(ActionType.Pass)), 0.0);
 	}
+	
+	public void write_file(String pathname) {
+		try {
+			 
+			//String content = "This is the content to write into file";
+ 
+			File file = new File(pathname);
+ 
+			// if file doesnt exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+ 
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(ToString());
+			bw.close();
+ 
+			System.out.println("Done");
+ 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public String ToString(){
 		Set<StateActionPair> keySet = QGraph.keySet();
 		String returnString = "";
@@ -23,11 +56,33 @@ public class QFunction {
 		}
 		return returnString;
 	}
+	
 	public void FromString(String s){
 		String[] split = s.split(",");
 		QGraph.put(SapFromString(split[0]), Double.parseDouble(split[1]));
 		
 	}
+	
+	public void readFile(String pathname) throws FileNotFoundException {
+	    String line = null;
+	    BufferedReader reader = new BufferedReader(new FileReader(pathname));
+	    try {
+	        while((line = reader.readLine()) != null){
+	            FromString(line);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    
+	    try {
+			reader.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
 	public StateActionPair SapFromString(String s){
 		String[] stateAction = s.split(":");
 		return new StateActionPair(StateFromString(stateAction[0]),ActionFromString(stateAction[1]));

@@ -1,7 +1,5 @@
 package game.players;
 
-import java.io.Serializable;
-
 public class StateActionPair {
 	public State s;
 	public Action a;
