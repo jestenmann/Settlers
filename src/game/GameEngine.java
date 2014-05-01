@@ -8,25 +8,18 @@ import game.components.Tile;
 import game.players.AIPlayer;
 import game.players.Action;
 import game.players.ActionType;
-import game.players.HumanPlayer;
 import game.players.LearningTuple;
 import game.players.Player;
 import game.players.QFunction;
+import game.players.RandomPlayer;
 import game.players.State;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 
 public class GameEngine {
@@ -64,8 +57,8 @@ public class GameEngine {
 
 		//use this to add AI strategy in the Player class 
 		p1 = new AIPlayer(Color.BLUE);
-		p2 = new AIPlayer(Color.ORANGE);
-		
+		p2 = new RandomPlayer(Color.ORANGE);
+
 		
 		//p3 = new AIPlayer(Color.WHITE);
 		//p4 = new AIPlayer(Color.RED);
@@ -153,15 +146,15 @@ public class GameEngine {
 					e.printStackTrace();
 				}
 			}
-		if(p2.type.equals("AIPlayer")){
+		/*if(p2.type.equals("AIPlayer")){
 			qf2 = new QFunction((AIPlayer)p2,players);
-		}
+		}*/
 	}
 	
 	private void turn(Player player) {
 		currPlayer = player;
 		board.setCurrPlayer(player);
-		if(player.type=="AIPlayer") {
+		if(player.type=="AIPlayer" && currPlayer.equals(p1)) {
 			if(isTraining){
 				int actionNum = (int)(Math.random()*7);
 				
@@ -212,7 +205,7 @@ public class GameEngine {
 					player.setLumber(player.getLumber() - 1);
 					player.setGrain(player.getGrain() - 1);
 					player.setWool(player.getWool() - 1);
-					System.out.println("built settlement");
+					//System.out.println("built settlement");
 					currPlayer.addVictoryPoint();
 					
 				}
@@ -241,7 +234,7 @@ public class GameEngine {
 					board.buildCity(city, player);
 					player.setGrain(player.getGrain() - 2);
 					player.setOre(player.getOre() - 3);
-					System.out.println("built city");
+					//System.out.println("built city");
 					currPlayer.addVictoryPoint();
 				}
 			}
@@ -323,14 +316,14 @@ public class GameEngine {
 			qf1.UpdateQ(new LearningTuple(s,s1,p1.getAction(),s1.Reward));
 			s = s1;
 		}
-		if(currPlayer.equals(p2)){
-			State s1 = new State((AIPlayer)p2,players);
-			qf2.UpdateQ(new LearningTuple(s,s1,p2.getAction(),s1.Reward));
-			s = s1;
-		}
+//		if(currPlayer.equals(p2)){
+//			State s1 = new State((AIPlayer)p2,players);
+//			qf2.UpdateQ(new LearningTuple(s,s1,p2.getAction(),s1.Reward));
+//			s = s1;
+//		}
 		//debug print statements
-		System.out.println("Player # cities " + player.getCities().size());
-		System.out.println("Player # settlements " + player.getSettlements().size());
+//		System.out.println("Player # cities " + player.getCities().size());
+//		System.out.println("Player # settlements " + player.getSettlements().size());
 	}
 	
 	
@@ -341,7 +334,7 @@ public class GameEngine {
 		
 		if (d.equals(DevelopmentCard.VICTORY_POINT))
 		{
-			System.out.println("victory point development card");
+			//System.out.println("victory point development card");
 			currPlayer.addVictoryPoint();
 		}
 		else if (d.equals(DevelopmentCard.KNIGHT)){
@@ -660,7 +653,7 @@ public class GameEngine {
 					winner = j;
 					break;
 				}
-				System.out.println(players.get(j) + " " + players.get(j).getPoints());
+				System.out.println(players.get(j) + " " + players.get(j).getPoints() + " points");
 				numTurns++;
 //				try {
 //				    Thread.sleep(1000);
@@ -803,7 +796,7 @@ public class GameEngine {
 			currPlayer.setLumber(currPlayer.getLumber() - 1);
 			currPlayer.setGrain(currPlayer.getGrain() - 1);
 			currPlayer.setWool(currPlayer.getWool() - 1);
-			System.out.println("built settlement");
+			//System.out.println("built settlement");
 			currPlayer.addVictoryPoint();
 			
 		}
@@ -851,7 +844,7 @@ public class GameEngine {
 			board.buildCity(board.settlement, currPlayer);
 			currPlayer.setGrain(currPlayer.getGrain() - 2);
 			currPlayer.setOre(currPlayer.getOre() - 3);
-			System.out.println("built city");
+		//	System.out.println("built city");
 			currPlayer.addVictoryPoint();
 			
 		}
